@@ -90,8 +90,7 @@ const startServer = async () => {
     console.log(`\n🚀 Velonex24 Server running on port ${PORT}`);
     console.log(`📡 API: http://localhost:${PORT}/api`);
     console.log(`⚡ WebSocket: ws://localhost:${PORT}`);
-    console.log(`💚 Health: http://localhost:${PORT}/api/health`);
-    console.log(`🛡️  CORS origin(s): ${ALLOWED_ORIGINS.join(', ')}\n`);
+    console.log(`💚 Health: http://localhost:${PORT}/api/health\n`);
   });
 };
 
