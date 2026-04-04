@@ -147,7 +147,7 @@ function ShipmentModal({ initial, onClose, onSaved }) {
           <button className="admin-modal-close" onClick={onClose}><X size={16} /></button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
           <div className="admin-modal-body">
             {err && <div style={{ padding: '10px 14px', marginBottom: 16, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8, color: '#f87171', fontSize: '0.85rem' }}>{err}</div>}
 
@@ -215,12 +215,11 @@ function ShipmentModal({ initial, onClose, onSaved }) {
                 <Field label="Delay Reason">
                   <input className="input" placeholder="e.g. Weather, port congestion" value={form.delayReason || ''} onChange={e => set('delayReason', e.target.value)} style={{ fontSize: '0.87rem' }} />
                 </Field>
-                <Field label="Delay Description (shown to customer)" >
-                  <textarea className="input" placeholder="Provide a detailed explanation for the customer..." value={form.delayDescription || ''} onChange={e => set('delayDescription', e.target.value)} rows={3} style={{ fontSize: '0.87rem', resize: 'vertical', gridColumn: '1/-1' }} />
-                </Field>
-              </div>
-              <div style={{ marginTop: 12 }} className="full-width">
-                <textarea className="input full-width" placeholder="Delay description..." value={form.delayDescription || ''} onChange={e => set('delayDescription', e.target.value)} rows={2} style={{ fontSize: '0.87rem', resize: 'vertical', width: '100%' }} />
+                <div style={{ gridColumn: '1/-1' }}>
+                  <Field label="Delay Description (shown to customer)" >
+                    <textarea className="input" placeholder="Provide a detailed explanation for the customer..." value={form.delayDescription || ''} onChange={e => set('delayDescription', e.target.value)} rows={2} style={{ fontSize: '0.87rem', resize: 'vertical', width: '100%' }} />
+                  </Field>
+                </div>
               </div>
             </div>
 
