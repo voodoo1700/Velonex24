@@ -29,7 +29,12 @@ class ApiService {
       throw new Error('Unable to reach the server. Please try again in a moment.');
     }
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Request failed');
+    if (!res.ok) {
+      if (data.messages && data.messages.length > 0) {
+        throw new Error(`${data.error}: ${data.messages.join(' ')}`);
+      }
+      throw new Error(data.error || 'Request failed');
+    }
     return data;
   }
 

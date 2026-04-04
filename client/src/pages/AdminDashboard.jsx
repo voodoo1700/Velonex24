@@ -114,8 +114,18 @@ function ShipmentModal({ initial, onClose, onSaved }) {
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setErr('');
     try {
-      if (isEdit) { await api.updateShipment(form._id, form); }
-      else { await api.createShipment(form); }
+      const payload = { ...form };
+      if (!isEdit) {
+        // Fallback currentLocation.city to origin.city since it is hidden in the form but required by mongoose
+        if (!payload.currentLocation?.city && payload.origin?.city) {
+          payload.currentLocation = { ...payload.currentLocation, city: payload.origin.city };
+        } else if (!payload.currentLocation?.city) {
+          payload.currentLocation = { ...payload.currentLocation, city: 'Origin Facility' };
+        }
+      }
+
+      if (isEdit) { await api.updateShipment(form._id, payload); }
+      else { await api.createShipment(payload); }
       onSaved(); onClose();
     } catch (e) { setErr(e.message); } finally { setSaving(false); }
   };
