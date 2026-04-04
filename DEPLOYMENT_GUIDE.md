@@ -52,7 +52,7 @@ We deploy the backend first so we can get its live URL, which your frontend will
 4. **Environment Variables:** Open the Environment Variables dropdown.
    - Add the variable that tells your frontend where to find the backend API.
    - Name: `VITE_API_URL`
-   - Value: `https://your-render-url-from-phase-2.onrender.com/api` *(Make sure to add `/api` at the end)*
+   - Value: `https://your-render-url-from-phase-2.onrender.com` *(Do NOT add `/api` at the end)*
 5. **Deploy:** Click the "Deploy" button. Vercel will build your React application and give you a `vercel.app` URL.
 
 ## Phase 4: Connect Your Hostinger Domain
