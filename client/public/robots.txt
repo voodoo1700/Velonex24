@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /tracking
+Allow: /shipping
+Allow: /locations
+Allow: /support
+Allow: /drop-off
+Allow: /auth
+
+Disallow: /admin
+Disallow: /admin/login
+Disallow: /api/
+
+Sitemap: https://www.velonex24.com/sitemap.xml

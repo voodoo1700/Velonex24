@@ -1,0 +1,561 @@
+/* ===========================
+   VELONEX24 DESIGN SYSTEM
+   FedEx-Inspired Corporate Theme
+   ========================= */
+
+:root {
+  /* Primary Palette */
+  --primary: #4D148C;
+  --primary-light: #6B2FAD;
+  --primary-dark: #3A0F6A;
+  --primary-hover: #5A1A9E;
+
+  /* Accent — Orange */
+  --accent: #FF6200;
+  --accent-hover: #E55800;
+  --accent-light: #FF8533;
+
+  /* Backgrounds */
+  --bg-white: #FFFFFF;
+  --bg-light: #F7F7F7;
+  --bg-gray: #EEEEEE;
+  --bg-section: #F2F2F2;
+
+  /* Text */
+  --text-dark: #1A1A1A;
+  --text-body: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-link: #007AB7;
+
+  /* Status Colors */
+  --success: #00805A;
+  --warning: #E5A100;
+  --danger: #D42A2A;
+  --info: #007AB7;
+
+  /* Borders */
+  --border: #E0E0E0;
+  --border-light: #EEEEEE;
+  --border-focus: #4D148C;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+
+  /* Layout */
+  --max-width: 1200px;
+  --navbar-height: 52px;
+}
+
+/* ===========================
+   RESET & BASE
+   ========================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-white);
+  color: var(--text-body);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--primary);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Focus-visible ring for all interactive elements — accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input, textarea, select {
+  font-family: var(--font);
+  outline: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ===========================
+   SCROLLBAR
+   ========================= */
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #F5F5F5; }
+::-webkit-scrollbar-thumb { background: #CCCCCC; border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ===========================
+   LAYOUT
+   ========================= */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.page {
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--navbar-height);
+}
+
+/* ===========================
+   TYPOGRAPHY
+   ========================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-dark);
+}
+
+/* ===========================
+   STATUS BADGES
+   ========================= */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-badge.pending   { background: #FFF3CD; color: #856404; }
+.status-badge.picked_up { background: #CCE5FF; color: #004085; }
+.status-badge.in_transit { background: #E8DAEF; color: #4D148C; }
+.status-badge.out_for_delivery { background: #D4EDDA; color: #155724; }
+.status-badge.delivered { background: #C3E6CB; color: #0B5E2F; }
+.status-badge.on_hold   { background: #F8D7DA; color: #721C24; }
+
+/* ===========================
+   BUTTONS — global hover/focus hardening
+   ========================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  min-height: 44px; /* WCAG tap target */
+  cursor: pointer;
+}
+
+.btn:hover { text-decoration: none; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(77,20,140,0.35); color: white; }
+
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(255,98,0,0.35); color: white; }
+
+.btn-outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
+.btn-outline:hover { background: var(--accent); color: white; }
+
+.btn-ghost { background: transparent; color: var(--text-link); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg-light); }
+
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #b52222; }
+
+.btn-sm { padding: 8px 16px; font-size: 0.8rem; min-height: 36px; }
+.btn-lg { padding: 14px 28px; font-size: 1rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ===========================
+   INPUTS
+   ========================= */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  min-height: 44px;
+}
+
+.input:hover { border-color: #aaa; }
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(77, 20, 140, 0.15);
+}
+
+.input::placeholder { color: var(--text-muted); }
+
+/* ===========================
+   NAV LINK HOVER (global)
+   ========================= */
+
+.nav-link {
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition-base);
+}
+
+.nav-link:hover::after { width: 100%; }
+
+/* ===========================
+   MODAL
+   ========================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-lg);
+}
+
+.modal-content {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===========================
+   LOADER
+   ========================= */
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===========================
+   HERO — CTA buttons (homepage)
+   ========================= */
+
+.hero-cta-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: white;
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  transition: all 0.2s;
+  min-width: 110px;
+  min-height: 76px;
+  justify-content: center;
+}
+
+.hero-cta-btn:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: white;
+  color: white;
+  transform: translateY(-2px);
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.hero-cta-btn.active {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.45);
+}
+
+/* ===========================
+   QUICK ACTIONS (icon row)
+   ========================= */
+
+.quick-action-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: color 0.2s, transform 0.2s;
+  width: 100px;
+  text-align: center;
+  min-height: 44px;
+}
+
+.quick-action-link:hover {
+  color: var(--primary);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.quick-action-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.quick-action-link:hover .quick-action-icon {
+  background: #f0ebf8;
+  border-color: var(--primary);
+}
+
+/* ===========================
+   CARD HOVER STATES
+   ========================= */
+
+.card-hover {
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   LAZY LOAD (fade-in)
+   ========================= */
+
+img.lazy {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+img.lazy.loaded {
+  opacity: 1;
+}
+
+/* ===========================
+   RESPONSIVE — MOBILE FIRST
+   ========================= */
+
+/* ---- 768px and below ---- */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Hero responsive */
+  .hero-section {
+    min-height: auto !important;
+    padding-top: 32px !important;
+    padding-bottom: 40px !important;
+  }
+
+  .hero-plane-img {
+    display: none !important;
+  }
+
+  .hero-text {
+    max-width: 100% !important;
+    padding: 0 16px !important;
+  }
+
+  .hero-cta-row {
+    gap: 10px !important;
+    justify-content: center;
+  }
+
+  .hero-cta-btn {
+    padding: 10px 18px;
+    min-width: 88px;
+    min-height: 66px;
+    font-size: 0.65rem;
+  }
+
+  /* Quick actions: 3-col on tablet-ish, 2-col on mobile */
+  .quick-actions-row {
+    gap: 20px 16px !important;
+    justify-content: center;
+  }
+
+  .quick-action-link {
+    width: calc(33% - 12px);
+    min-width: 80px;
+  }
+
+  /* Why ship section */
+  .why-ship-grid {
+    flex-direction: column !important;
+  }
+
+  /* Delivery cards */
+  .delivery-cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Section padding */
+  section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Comparison banner */
+  .compare-flex {
+    flex-direction: column !important;
+  }
+
+  /* Profile page 2-col → 1-col */
+  .profile-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Billing table — allow scroll */
+  .billing-table-wrap {
+    overflow-x: auto;
+  }
+}
+
+/* ---- 480px and below ---- */
+@media (max-width: 480px) {
+  .quick-action-link {
+    width: calc(50% - 10px);
+  }
+
+  .hero-cta-btn {
+    padding: 8px 12px;
+    min-width: 76px;
+  }
+
+  .hero-track-form {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .hero-track-form input,
+  .hero-track-form button {
+    border-radius: var(--radius-sm) !important;
+    width: 100%;
+  }
+}
+
+/* ---- 1280px and above — ensure max-width is respected ---- */
+@media (min-width: 1280px) {
+  .container {
+    padding: 0 32px;
+  }
+}
