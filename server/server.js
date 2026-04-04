@@ -22,37 +22,24 @@ const io = initializeSocket(server);
 app.set('io', io);
 
 // ── Security: CORS — restrict to known origins ─────────────────
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-
-// Build origin list: include www & non-www variants + Vercel preview
-const ALLOWED_ORIGINS = [
-  clientUrl,
-  'http://localhost:5173',
-  'http://localhost:3000',
-];
-
-// Auto-add www / non-www counterpart so both always work
-if (clientUrl.includes('://www.')) {
-  ALLOWED_ORIGINS.push(clientUrl.replace('://www.', '://'));
-} else if (clientUrl.includes('://') && !clientUrl.includes('localhost')) {
-  ALLOWED_ORIGINS.push(clientUrl.replace('://', '://www.'));
-}
-
-// Include Vercel preview domain if set
-if (process.env.VERCEL_URL) {
-  ALLOWED_ORIGINS.push(`https://${process.env.VERCEL_URL}`);
-}
-
-// Also allow the .vercel.app domain
-ALLOWED_ORIGINS.push('https://velonex24.vercel.app');
-
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow server-to-server (no origin) and known client origins
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+    // Allow server-to-server (no origin) 
+    if (!origin) return callback(null, true);
+    
+    // Flexible origin check
+    const isAllowed = 
+      origin.includes('localhost') || 
+      origin.includes('velonex24.com') ||
+      origin.includes('velonex24.vercel.app') ||
+      (process.env.CLIENT_URL && origin === process.env.CLIENT_URL);
+      
+    if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS: Origin ${origin} not allowed`));
+      console.error(`[CORS BLOCK] Origin rejected: ${origin}`);
+      // Passing an error to callback returns a 500 status. We return 403 Forbidden instead by succeeding but returning false.
+      callback(null, false); 
     }
   },
   credentials: true,
