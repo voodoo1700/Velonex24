@@ -13,11 +13,21 @@ class ApiService {
     };
   }
 
-  async request(path, options = {}) {
-    const res = await fetch(`${this.baseURL}${path}`, {
-      ...options,
-      headers: this.getHeaders()
-    });
+  async request(path, options = {}, _retried = false) {
+    let res;
+    try {
+      res = await fetch(`${this.baseURL}${path}`, {
+        ...options,
+        headers: this.getHeaders()
+      });
+    } catch (err) {
+      // Auto-retry once — handles Render free-tier cold starts (~30s)
+      if (!_retried) {
+        await new Promise(r => setTimeout(r, 3000));
+        return this.request(path, options, true);
+      }
+      throw new Error('Unable to reach the server. Please try again in a moment.');
+    }
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Request failed');
     return data;

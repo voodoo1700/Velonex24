@@ -22,10 +22,29 @@ const io = initializeSocket(server);
 app.set('io', io);
 
 // ── Security: CORS — restrict to known origins ─────────────────
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+// Build origin list: include www & non-www variants + Vercel preview
 const ALLOWED_ORIGINS = [
-  process.env.CLIENT_URL || 'http://localhost:5173',
+  clientUrl,
+  'http://localhost:5173',
   'http://localhost:3000',
-].filter(Boolean);
+];
+
+// Auto-add www / non-www counterpart so both always work
+if (clientUrl.includes('://www.')) {
+  ALLOWED_ORIGINS.push(clientUrl.replace('://www.', '://'));
+} else if (clientUrl.includes('://') && !clientUrl.includes('localhost')) {
+  ALLOWED_ORIGINS.push(clientUrl.replace('://', '://www.'));
+}
+
+// Include Vercel preview domain if set
+if (process.env.VERCEL_URL) {
+  ALLOWED_ORIGINS.push(`https://${process.env.VERCEL_URL}`);
+}
+
+// Also allow the .vercel.app domain
+ALLOWED_ORIGINS.push('https://velonex24.vercel.app');
 
 app.use(cors({
   origin: (origin, callback) => {
