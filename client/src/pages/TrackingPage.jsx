@@ -176,15 +176,7 @@ const TrackingPage = () => {
             </button>
           </form>
 
-          {/* Sample tracking IDs */}
-          <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', alignSelf: 'center' }}>Try:</span>
-            {['VLX-A1B2C3D4', 'VLX-Q7R8S9T0', 'VLX-M3N4O5P6'].map(id => (
-              <button key={id} onClick={() => { setTrackingId(id); setTimeout(() => document.getElementById('track-button')?.click(), 100); }} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, padding: '4px 10px', color: 'rgba(255,255,255,0.65)', fontSize: '0.75rem', cursor: 'pointer', fontFamily: 'monospace' }}>
-                {id}
-              </button>
-            ))}
-          </div>
+
         </div>
       </div>
 
