@@ -13,12 +13,12 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 /* ─── Status config ─────────────────────────────────────── */
 const STATUS_META = {
-  pending:          { label: 'Shipment Created',    icon: '📋', color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
-  picked_up:        { label: 'Picked Up',           icon: '📦', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
-  in_transit:       { label: 'In Transit',          icon: '🚚', color: '#6366f1', bg: 'rgba(99,102,241,0.08)' },
-  out_for_delivery: { label: 'Out for Delivery',    icon: '🚀', color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
-  delivered:        { label: 'Delivered',           icon: '✅', color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
-  on_hold:          { label: 'On Hold',             icon: '⏸',  color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
+  pending:          { label: 'Shipment Created',    icon: <FileText size={18} />, color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+  picked_up:        { label: 'Picked Up',           icon: <Package size={18} />, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
+  in_transit:       { label: 'In Transit',          icon: <Truck size={18} />, color: '#6366f1', bg: 'rgba(99,102,241,0.08)' },
+  out_for_delivery: { label: 'Out for Delivery',    icon: <Truck size={18} />, color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
+  delivered:        { label: 'Delivered',           icon: <CheckCircle2 size={18} />, color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+  on_hold:          { label: 'On Hold',             icon: <AlertTriangle size={18} />,  color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
 };
 
 const STEPS = ['pending', 'picked_up', 'in_transit', 'out_for_delivery', 'delivered'];
@@ -224,7 +224,6 @@ const TrackingPage = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-                      <span style={{ fontSize: '1.6rem' }}>{meta.icon}</span>
                       <span style={{ fontSize: '1.35rem', fontWeight: 900, color: meta.color }}>{meta.label}</span>
                     </div>
                     <div style={{ fontFamily: 'monospace', fontSize: '1.05rem', fontWeight: 700, color: '#374151', letterSpacing: '0.05em' }}>
@@ -356,46 +355,67 @@ const TrackingPage = () => {
 
             {/* ── TIMELINE ──────────────────────────────── */}
             <div style={{ background: 'white', borderRadius: 16, padding: '24px 28px', boxShadow: '0 4px 24px rgba(0,0,0,0.06)', border: '1px solid #F3F4F6' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
                 <FileText size={17} style={{ color: '#6366f1' }} />
-                <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#111827', margin: 0 }}>Shipment History</h3>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827', margin: 0 }}>Shipment History</h3>
               </div>
-              <div>
+              <div style={{ paddingLeft: 8 }}>
                 {shipment.timeline?.length === 0 && (
                   <div style={{ color: '#9CA3AF', fontSize: '0.9rem', textAlign: 'center', padding: '20px 0' }}>No timeline events yet</div>
                 )}
-                {shipment.timeline?.slice().reverse().map((entry, i) => {
+                
+                {/* Changed to Chronological Order */}
+                {shipment.timeline?.map((entry, i) => {
                   const eMeta = STATUS_META[entry.status] || STATUS_META.pending;
-                  const isFirst = i === 0;
+                  const isLast = i === shipment.timeline.length - 1;
+                  const isCurrent = isLast; // The last event in chronological order is the current/latest status
+                  
                   return (
-                    <div key={i} style={{ display: 'flex', gap: 18, paddingBottom: 24 }}>
-                      {/* Left timeline */}
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                    <div key={i} style={{ display: 'flex', gap: 24, paddingBottom: isLast ? 0 : 36, position: 'relative' }}>
+                      
+                      {/* Left timeline connector line */}
+                      {!isLast && (
+                        <div style={{ position: 'absolute', top: 40, left: 19, bottom: 0, width: 2, background: 'linear-gradient(to bottom, #E5E7EB, #F3F4F6)' }} />
+                      )}
+                      
+                      {/* Node Icon */}
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, zIndex: 1 }}>
                         <div style={{
-                          width: 42, height: 42, borderRadius: '50%',
-                          background: isFirst ? eMeta.bg : '#F9FAFB',
-                          border: `2px solid ${isFirst ? eMeta.color : '#E5E7EB'}`,
+                          width: 40, height: 40, borderRadius: '50%',
+                          background: 'white',
+                          border: `2px solid ${isCurrent ? eMeta.color : '#E5E7EB'}`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: '1.1rem', zIndex: 1,
-                          boxShadow: isFirst ? `0 0 0 4px ${eMeta.color}20` : 'none'
+                          color: isCurrent ? eMeta.color : '#9CA3AF',
+                          boxShadow: isCurrent ? `0 0 0 6px ${eMeta.bg}` : 'none',
+                          transition: 'all 0.3s'
                         }}>
                           {eMeta.icon}
                         </div>
-                        {i < (shipment.timeline.length - 1) && (
-                          <div style={{ width: 2, flex: 1, background: '#F3F4F6', minHeight: 24, marginTop: 4 }} />
-                        )}
                       </div>
-                      {/* Content */}
-                      <div style={{ flex: 1, paddingTop: 8 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8, marginBottom: 6 }}>
-                          <div style={{ display: 'flex', align: 'center', gap: 8 }}>
-                            <span style={{ fontWeight: 700, fontSize: '0.9rem', color: isFirst ? eMeta.color : '#374151' }}>{eMeta.label}</span>
+                      
+                      {/* Details Area */}
+                      <div style={{ flex: 1, paddingTop: 2 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap', gap: 12, marginBottom: 4 }}>
+                          {/* Title */}
+                          <span style={{ fontWeight: 800, fontSize: '0.98rem', color: isCurrent ? eMeta.color : '#111827', marginTop: 2 }}>
+                            {eMeta.label}
+                          </span>
+                          
+                          {/* Right Aligned Split Timestamp */}
+                          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0 }}>
+                             <span style={{ fontSize: '0.85rem', color: '#111827', fontWeight: 600 }}>{formatDate(entry.timestamp)}</span>
+                             <span style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: 2 }}>{formatDateTime(entry.timestamp).split(', ')[1] || formatDateTime(entry.timestamp)}</span>
                           </div>
-                          <span style={{ fontSize: '0.75rem', color: '#9CA3AF', fontWeight: 500 }}>{formatDateTime(entry.timestamp)}</span>
                         </div>
-                        <div style={{ fontSize: '0.87rem', color: '#4B5563', marginBottom: 4, lineHeight: 1.6 }}>{entry.description}</div>
-                        <div style={{ fontSize: '0.78rem', color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <MapPin size={12} />{entry.location}
+                        
+                        {/* Description */}
+                        <div style={{ fontSize: '0.87rem', color: '#4B5563', marginBottom: 8, lineHeight: 1.5, paddingRight: '20%' }}>
+                          {entry.description}
+                        </div>
+                        
+                        {/* Location Tag */}
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#F8F9FA', border: '1px solid #E5E7EB', padding: '4px 8px', borderRadius: 6, fontSize: '0.75rem', color: '#6B7280', fontWeight: 600 }}>
+                          <MapPin size={12} /> {entry.location}
                         </div>
                       </div>
                     </div>
