@@ -92,10 +92,17 @@ const AdminLogin = () => {
             {loading ? <span className="spinner" style={{ width: 20, height: 20, borderWidth: 2 }} /> : 'SIGN IN'}
           </button>
         </form>
-
-        <p style={{ textAlign: 'center', marginTop: 20, color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-          Demo: admin@velonex24.com / admin123
-        </p>
+        <div style={{ textAlign: 'center', marginTop: 24 }}>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              background: 'none', border: 'none', color: 'var(--text-muted)',
+              fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline'
+            }}
+          >
+            ← Back to Home
+          </button>
+        </div>
       </div>
     </div>
   );
