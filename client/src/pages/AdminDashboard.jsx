@@ -56,6 +56,7 @@ const EMPTY_FORM = () => ({
   status: 'pending',
   holdReason: '', delayReason: '', delayDescription: '',
   customsIntercepted: false, borderClearanceEligible: false, customsNotes: '',
+  estimatedDelivery: '',
   invoices: [],
 });
 
@@ -87,7 +88,16 @@ function Field({ label, children }) {
 /* ─── Shipment Modal ────────────────────────────────────── */
 function ShipmentModal({ initial, onClose, onSaved }) {
   const isEdit = !!initial?._id;
-  const [form, setForm] = useState(initial ? { ...initial, trackingId: initial.trackingId || genTrackingId() } : EMPTY_FORM());
+  const [form, setForm] = useState(() => {
+    if (initial) {
+      const copy = { ...initial, trackingId: initial.trackingId || genTrackingId() };
+      if (copy.estimatedDelivery) {
+        copy.estimatedDelivery = new Date(copy.estimatedDelivery).toISOString().substring(0, 10);
+      }
+      return copy;
+    }
+    return EMPTY_FORM();
+  });
   const [newInvoice, setNewInvoice] = useState({ amount: '', description: '', type: 'shipping_fee' });
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState('');
@@ -123,6 +133,7 @@ function ShipmentModal({ initial, onClose, onSaved }) {
           payload.currentLocation = { ...payload.currentLocation, city: 'Origin Facility' };
         }
       }
+      if (!payload.estimatedDelivery) delete payload.estimatedDelivery;
 
       if (isEdit) { await api.updateShipment(form._id, payload); }
       else { await api.createShipment(payload); }
@@ -202,6 +213,7 @@ function ShipmentModal({ initial, onClose, onSaved }) {
               <div className="admin-form-section-title">📦 Package Info</div>
               <div className="admin-form-grid">
                 {inp('Weight (lbs)', 'weight', 'number', '2.5')}
+                {inp('Est. Delivery', 'estimatedDelivery', 'date')}
                 <Field label="Package Type">
                   <select className="input" style={{ fontSize: '0.87rem' }} value={form.packageType} onChange={e => set('packageType', e.target.value)}>
                     {['Standard', 'Express', 'Flat Rate', 'Fragile', 'Oversized', 'Priority'].map(t => <option key={t} value={t}>{t}</option>)}
