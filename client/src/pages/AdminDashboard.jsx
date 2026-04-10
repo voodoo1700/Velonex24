@@ -6,7 +6,7 @@ import {
   CheckCircle2, PauseCircle, Send, X, Plus, Edit3,
   Truck, Clock, LogOut, Search, Shield, Trash2,
   RefreshCw, AlertTriangle, DollarSign, FileText,
-  Globe, RotateCcw, Zap, Hash
+  Globe, RotateCcw, Zap, Hash, MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
