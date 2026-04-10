@@ -99,6 +99,7 @@ function ShipmentModal({ initial, onClose, onSaved }) {
     return EMPTY_FORM();
   });
   const [newInvoice, setNewInvoice] = useState({ amount: '', description: '', type: 'shipping_fee' });
+  const [newTimeline, setNewTimeline] = useState({ status: 'in_transit', location: '', description: '', timestamp: new Date().toISOString().slice(0, 16) });
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState('');
 
@@ -120,6 +121,17 @@ function ShipmentModal({ initial, onClose, onSaved }) {
   };
 
   const removeInvoice = (idx) => setForm(prev => ({ ...prev, invoices: prev.invoices.filter((_, i) => i !== idx) }));
+
+  const addTimeline = () => {
+    if (!newTimeline.location || !newTimeline.description) return;
+    setForm(prev => ({
+      ...prev,
+      timeline: [...(prev.timeline || []), { ...newTimeline, timestamp: new Date(newTimeline.timestamp).toISOString() }]
+    }));
+    setNewTimeline({ status: 'in_transit', location: '', description: '', timestamp: new Date().toISOString().slice(0, 16) });
+  };
+
+  const removeTimeline = (idx) => setForm(prev => ({ ...prev, timeline: prev.timeline.filter((_, i) => i !== idx) }));
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setErr('');
@@ -224,6 +236,68 @@ function ShipmentModal({ initial, onClose, onSaved }) {
                     {STATUS_OPTIONS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                   </select>
                 </Field>
+              </div>
+            </div>
+
+            {/* Current Location (Real-time Map Positioning) */}
+            <div className="admin-form-section" style={{ border: '1px solid rgba(249,115,22,0.2)', background: 'rgba(249,115,22,0.02)', borderRadius: 12 }}>
+              <div className="admin-form-section-title" style={{ color: '#f97316' }}><MapPin size={13} /> 🗺️ Real-Time Map Location</div>
+              <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>Manually position the package marker on the tracking map.</p>
+              <div className="admin-form-grid">
+                {inp('Current City', 'currentLocation.city', 'text', 'e.g. Dubai Hub')}
+                {inp('Latitude', 'currentLocation.lat', 'number', '51.4700', { step: '0.0001' })}
+                {inp('Longitude', 'currentLocation.lng', 'number', '-0.4543', { step: '0.0001' })}
+              </div>
+            </div>
+
+            {/* Timeline Management */}
+            <div className="admin-form-section">
+              <div className="admin-form-section-title"><Clock size={13} /> 📜 Shipment History (Timeline)</div>
+              
+              {/* Existing Timeline */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+                {(form.timeline || []).length === 0 && <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.2)', textAlign: 'center', padding: '10px' }}>No timeline events recorded</div>}
+                {(form.timeline || []).map((entry, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, alignItems: 'center' }}>
+                    <div style={{ fontSize: '1rem' }}>{STATUS_ICONS[entry.status] || '📍'}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'white' }}>{entry.location}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>{entry.description}</div>
+                      <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>
+                        {new Date(entry.timestamp).toLocaleString()} • <span style={{ textTransform: 'uppercase', fontWeight: 800, color: 'rgba(124,58,237,0.8)' }}>{entry.status}</span>
+                      </div>
+                    </div>
+                    <button type="button" onClick={() => removeTimeline(i)} style={{ background: 'none', border: 'none', color: 'rgba(239,68,68,0.6)', cursor: 'pointer', padding: 4 }}>
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add New Event */}
+              <div style={{ padding: '16px', background: 'rgba(124,58,237,0.05)', border: '1px dashed rgba(124,58,237,0.3)', borderRadius: 10 }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Add New History Event</div>
+                <div className="admin-form-grid" style={{ gap: '10px' }}>
+                  <Field label="Event Location">
+                    <input className="input" placeholder="e.g. London Distribution Center" value={newTimeline.location} onChange={e => setNewTimeline(p => ({ ...p, location: e.target.value }))} style={{ fontSize: '0.82rem' }} />
+                  </Field>
+                  <Field label="Status">
+                    <select className="input" value={newTimeline.status} onChange={e => setNewTimeline(p => ({ ...p, status: e.target.value }))} style={{ fontSize: '0.82rem' }}>
+                      {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Timestamp">
+                    <input className="input" type="datetime-local" value={newTimeline.timestamp} onChange={e => setNewTimeline(p => ({ ...p, timestamp: e.target.value }))} style={{ fontSize: '0.82rem' }} />
+                  </Field>
+                  <Field label="Description">
+                    <input className="input" placeholder="e.g. Package arrived at facility" value={newTimeline.description} onChange={e => setNewTimeline(p => ({ ...p, description: e.target.value }))} style={{ fontSize: '0.82rem' }} />
+                  </Field>
+                  <div style={{ gridColumn: '1/-1', display: 'flex', justifyContent: 'flex-end' }}>
+                    <button type="button" onClick={addTimeline} className="btn btn-primary btn-sm" style={{ padding: '0 20px', fontSize: '0.78rem' }} disabled={!newTimeline.location || !newTimeline.description}>
+                      <Plus size={14} /> Add to History
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
