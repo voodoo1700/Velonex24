@@ -50,9 +50,9 @@ const EMPTY_FORM = () => ({
   senderName: '', senderAddress: '',
   receiverName: '', receiverAddress: '',
   weight: '', packageType: 'Standard',
-  origin:      { city: '', lat: 40.7128, lng: -74.006 },
-  destination: { city: '', lat: 34.0522, lng: -118.243 },
-  currentLocation: { city: '', lat: 40.7128, lng: -74.006 },
+  origin:          { city: '', lat: 0, lng: 0 },
+  destination:     { city: '', lat: 0, lng: 0 },
+  currentLocation: { city: '', lat: 0, lng: 0 },
   status: 'pending',
   holdReason: '', delayReason: '', delayDescription: '',
   customsIntercepted: false, borderClearanceEligible: false, customsNotes: '',
@@ -133,6 +133,29 @@ function ShipmentModal({ initial, onClose, onSaved }) {
 
   const removeTimeline = (idx) => setForm(prev => ({ ...prev, timeline: prev.timeline.filter((_, i) => i !== idx) }));
 
+  const handleGeocode = async (path) => {
+    const city = path.split('.').reduce((o, i) => o[i], form);
+    if (!city || !city.trim()) return;
+    try {
+      const token = import.meta.env.VITE_MAPBOX_TOKEN;
+      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(city)}.json?access_token=${token}&limit=1`);
+      const data = await resp.json();
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        const prefix = path.split('.')[0];
+        setForm(prev => ({
+          ...prev,
+          [prefix]: { ...prev[prefix], lat: parseFloat(lat.toFixed(6)), lng: parseFloat(lng.toFixed(6)) }
+        }));
+      } else {
+        alert("City not found. Please check the spelling or enter coordinates manually.");
+      }
+    } catch (e) { 
+      console.error('Geocoding error:', e); 
+      alert("Failed to fetch coordinates. Please check your internet connection.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setErr('');
     try {
@@ -206,7 +229,10 @@ function ShipmentModal({ initial, onClose, onSaved }) {
               <div className="admin-form-grid">
                 {inp('Sender Name', 'senderName', 'text', 'Full name or company')}
                 {inp('Sender Address', 'senderAddress', 'text', '123 Main St, City, ST')}
-                {inp('Origin City', 'origin.city', 'text', 'New York')}
+                <div style={{ position: 'relative' }}>
+                  {inp('Origin City', 'origin.city', 'text', 'New York')}
+                  <button type="button" onClick={() => handleGeocode('origin.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#4D148C', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>🔍 Lookup</button>
+                </div>
               </div>
             </div>
 
@@ -216,7 +242,10 @@ function ShipmentModal({ initial, onClose, onSaved }) {
               <div className="admin-form-grid">
                 {inp('Receiver Name', 'receiverName', 'text', 'Full name')}
                 {inp('Receiver Address', 'receiverAddress', 'text', '456 Oak Ave, City, ST')}
-                {inp('Destination City', 'destination.city', 'text', 'Los Angeles')}
+                <div style={{ position: 'relative' }}>
+                  {inp('Destination City', 'destination.city', 'text', 'Los Angeles')}
+                  <button type="button" onClick={() => handleGeocode('destination.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#4D148C', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>🔍 Lookup</button>
+                </div>
               </div>
             </div>
 
@@ -244,7 +273,10 @@ function ShipmentModal({ initial, onClose, onSaved }) {
               <div className="admin-form-section-title" style={{ color: '#f97316' }}><MapPin size={13} /> 🗺️ Real-Time Map Location</div>
               <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>Manually position the package marker on the tracking map.</p>
               <div className="admin-form-grid">
-                {inp('Current City', 'currentLocation.city', 'text', 'e.g. Dubai Hub')}
+                <div style={{ position: 'relative' }}>
+                  {inp('Current City', 'currentLocation.city', 'text', 'e.g. Dubai Hub')}
+                  <button type="button" onClick={() => handleGeocode('currentLocation.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#f97316', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>🔍 Lookup</button>
+                </div>
                 {inp('Latitude', 'currentLocation.lat', 'number', '51.4700', { step: '0.0001' })}
                 {inp('Longitude', 'currentLocation.lng', 'number', '-0.4543', { step: '0.0001' })}
               </div>
