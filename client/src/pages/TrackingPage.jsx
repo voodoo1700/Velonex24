@@ -33,7 +33,8 @@ const formatDateTime = (d) => {
 };
 
 /* ─── Progress Stepper ──────────────────────────────────── */
-function ProgressStepper({ status }) {
+function ProgressStepper({ shipment }) {
+  const status = shipment?.status;
   const isHold = status === 'on_hold';
   const activeIdx = isHold ? -1 : STEPS.indexOf(status);
   return (
@@ -66,7 +67,12 @@ function ProgressStepper({ status }) {
             </div>
             {/* Label */}
             <div style={{ textAlign: 'center', fontSize: '0.72rem', fontWeight: isCurrent ? 700 : 500, color: done ? '#111827' : '#9CA3AF', lineHeight: 1.3 }}>
-              {meta.label}
+              {isCurrent && step === 'in_transit' && shipment.currentLocation?.city ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ color: meta.color, fontWeight: 800 }}>{shipment.currentLocation.city}</span>
+                  <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>In Transit</span>
+                </div>
+              ) : meta.label}
             </div>
           </div>
         );
@@ -97,6 +103,8 @@ const TrackingPage = () => {
   const [error, setError] = useState('');
   const mapContainer = useRef(null);
   const mapRef = useRef(null);
+  const [mapStyle, setMapStyle] = useState('light-v11');
+  const animationRef = useRef(null);
 
   const handleTrack = async (e) => {
     e?.preventDefault();
@@ -115,13 +123,18 @@ const TrackingPage = () => {
   useEffect(() => {
     if (!shipment || !mapContainer.current) return;
     if (mapRef.current) mapRef.current.remove();
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+
     try {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
+        style: `mapbox://styles/mapbox/${mapStyle}`,
         center: [shipment.currentLocation.lng, shipment.currentLocation.lat],
-        zoom: 4
+        zoom: 4,
+        projection: 'globe'
       });
+
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
       map.on('load', () => {
         // Origin marker
         new mapboxgl.Marker({ color: '#4D148C' }).setLngLat([shipment.origin.lng, shipment.origin.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Origin:</strong> ${shipment.origin.city}`)).addTo(map);
@@ -136,13 +149,39 @@ const TrackingPage = () => {
         map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#4D148C', 'line-width': 2, 'line-dasharray': [4, 3], 'line-opacity': 0.4 } });
         map.addSource('traveled', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[shipment.origin.lng, shipment.origin.lat],[shipment.currentLocation.lng, shipment.currentLocation.lat]] } } });
         map.addLayer({ id: 'traveled-line', type: 'line', source: 'traveled', paint: { 'line-color': '#f97316', 'line-width': 3 } });
+
+        // Animation Layer (Marching Ants)
+        map.addLayer({
+          id: 'route-animation',
+          type: 'line',
+          source: 'traveled',
+          paint: {
+            'line-color': 'rgba(255,255,255,0.8)',
+            'line-width': 2,
+            'line-dasharray': [0, 2]
+          }
+        });
+
+        let step = 0;
+        const animate = () => {
+          step = (step + 0.2) % 30;
+          if (map.getLayer('route-animation')) {
+            map.setPaintProperty('route-animation', 'line-dasharray', [0, 4, 3, step/10]);
+          }
+          animationRef.current = requestAnimationFrame(animate);
+        };
+        animate();
+
         const bounds = new mapboxgl.LngLatBounds().extend([shipment.origin.lng, shipment.origin.lat]).extend([shipment.destination.lng, shipment.destination.lat]).extend([shipment.currentLocation.lng, shipment.currentLocation.lat]);
         map.fitBounds(bounds, { padding: 60 });
       });
       mapRef.current = map;
     } catch (err) { console.error('Map error:', err); }
-    return () => { if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } };
-  }, [shipment]);
+    return () => { 
+      if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } 
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [shipment, mapStyle]);
 
   const meta = shipment ? (STATUS_META[shipment.status] || STATUS_META.pending) : null;
   const totalInvoice = (shipment?.invoices || []).reduce((s, i) => s + i.amount, 0);
@@ -216,13 +255,33 @@ const TrackingPage = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-                      <span style={{ fontSize: '1.35rem', fontWeight: 900, color: meta.color }}>{meta.label}</span>
+                      <span style={{ fontSize: '1.35rem', fontWeight: 900, color: meta.color }}>
+                        {shipment.status === 'in_transit' && shipment.currentLocation?.city 
+                          ? `Currently in ${shipment.currentLocation.city}` 
+                          : meta.label}
+                      </span>
+                      {shipment.status === 'in_transit' && (
+                        <span style={{ 
+                          width: 8, height: 8, borderRadius: '50%', background: '#f97316', 
+                          boxShadow: '0 0 0 3px rgba(249,115,22,0.2)',
+                          animation: 'pulse 2s infinite'
+                        }} />
+                      )}
                     </div>
                     <div style={{ fontFamily: 'monospace', fontSize: '1.05rem', fontWeight: 700, color: '#374151', letterSpacing: '0.05em' }}>
                       {shipment.trackingId}
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: '#6B7280', marginTop: 4 }}>
-                      {shipment.origin?.city} → {shipment.destination?.city}
+                    <div style={{ fontSize: '0.85rem', color: '#6B7280', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Globe size={14} style={{ opacity: 0.5 }} />
+                      <span>{shipment.origin?.city}</span>
+                      <span style={{ color: '#D1D5DB' }}>→</span>
+                      {shipment.status === 'in_transit' && shipment.currentLocation?.city && (
+                        <>
+                          <span style={{ color: '#f97316', fontWeight: 600 }}>{shipment.currentLocation.city}</span>
+                          <span style={{ color: '#D1D5DB' }}>→</span>
+                        </>
+                      )}
+                      <span>{shipment.destination?.city}</span>
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
@@ -237,7 +296,7 @@ const TrackingPage = () => {
                 </div>
 
                 {/* Progress stepper */}
-                {shipment.status !== 'on_hold' && <ProgressStepper status={shipment.status} />}
+                {shipment.status !== 'on_hold' && <ProgressStepper shipment={shipment} />}
                 {shipment.status === 'on_hold' && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', background: '#FEF2F2', borderRadius: 10, border: '1px solid #FECACA' }}>
                     <AlertTriangle size={20} style={{ color: '#EF4444', flexShrink: 0 }} />
@@ -337,6 +396,29 @@ const TrackingPage = () => {
                   <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#111827' }}>Live Tracking Map</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: '0.75rem', color: '#9CA3AF' }}>
+                  <div style={{ display: 'flex', background: '#F3F4F6', borderRadius: 8, padding: 3, gap: 2 }}>
+                    <button 
+                      onClick={() => setMapStyle('light-v11')}
+                      style={{ 
+                        border: 'none', padding: '4px 10px', borderRadius: 6, fontSize: '0.7rem', fontWeight: 700,
+                        background: mapStyle === 'light-v11' ? 'white' : 'transparent',
+                        color: mapStyle === 'light-v11' ? '#4D148C' : '#6B7280',
+                        boxShadow: mapStyle === 'light-v11' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                        cursor: 'pointer', transition: 'all 0.2s'
+                      }}
+                    >Light</button>
+                    <button 
+                      onClick={() => setMapStyle('satellite-v9')}
+                      style={{ 
+                        border: 'none', padding: '4px 10px', borderRadius: 6, fontSize: '0.7rem', fontWeight: 700,
+                        background: mapStyle === 'satellite-v9' ? 'white' : 'transparent',
+                        color: mapStyle === 'satellite-v9' ? '#4D148C' : '#6B7280',
+                        boxShadow: mapStyle === 'satellite-v9' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                        cursor: 'pointer', transition: 'all 0.2s'
+                      }}
+                    >Satellite</button>
+                  </div>
+                  <div style={{ width: 1, height: 16, background: '#E5E7EB' }} />
                   <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#4D148C', marginRight: 5 }} />Origin</span>
                   <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#f97316', marginRight: 5 }} />Current</span>
                   <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#10b981', marginRight: 5 }} />Destination</span>
