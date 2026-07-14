@@ -108,7 +108,7 @@ const ChatWidget = () => {
                   ) : (
                     <div className={`chat-bubble ${msg.sender}`}>
                       {msg.sender === 'admin' && (
-                        <div className="sender-label">🟢 Support Agent</div>
+                        <div className="sender-label">Support Agent</div>
                       )}
                       <div style={{ whiteSpace: 'pre-wrap' }}>{msg.message}</div>
                       <div className="timestamp">{formatTime(msg.timestamp)}</div>

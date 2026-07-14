@@ -29,14 +29,14 @@ const ShippingPage = () => {
       name: 'Velonex Express',
       desc: 'Next-day delivery for your most urgent shipments. Guaranteed delivery by 10:30 AM.',
       features: ['Next-day delivery', 'Real-time tracking', 'Signature required', 'Money-back guarantee'],
-      color: '#FF6200'
+      color: '#2563EB'
     },
     {
       icon: <Truck size={28} />,
       name: 'Velonex Ground',
       desc: 'Reliable ground shipping for everyday packages. Cost-effective with full tracking.',
       features: ['3-5 day delivery', 'Full tracking', 'Up to 150 lbs', 'Residential & commercial'],
-      color: '#4D148C'
+      color: '#0A2540'
     },
     {
       icon: <Plane size={28} />,
@@ -98,8 +98,8 @@ const ShippingPage = () => {
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16
               }}>
                 {[
-                  { name: 'Express', price: quoteResult.express, days: quoteResult.expressDays, color: '#FF6200' },
-                  { name: 'Standard', price: quoteResult.standard, days: quoteResult.standardDays, color: '#4D148C' },
+                  { name: 'Express', price: quoteResult.express, days: quoteResult.expressDays, color: '#2563EB' },
+                  { name: 'Standard', price: quoteResult.standard, days: quoteResult.standardDays, color: '#0A2540' },
                   { name: 'Economy', price: quoteResult.economy, days: quoteResult.economyDays, color: '#007AB7' },
                 ].map((rate, i) => (
                   <div key={i} style={{

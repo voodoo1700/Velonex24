@@ -93,7 +93,7 @@ const BillingPage = () => {
                   const isPaid = paid.includes(inv.id) || inv.status === 'paid';
                   return (
                     <tr key={inv.id} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#4D148C', fontFamily: 'monospace' }}>{inv.id}</td>
+                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0A2540', fontFamily: 'monospace' }}>{inv.id}</td>
                       <td style={{ padding: '12px 16px', color: '#555' }}>{inv.date}</td>
                       <td style={{ padding: '12px 16px', color: '#555' }}>{inv.due}</td>
                       <td style={{ padding: '12px 16px', color: '#555', textAlign: 'center' }}>{inv.packages}</td>
@@ -108,7 +108,7 @@ const BillingPage = () => {
                             <button
                               onClick={() => payNow(inv.id)}
                               disabled={payingId === inv.id}
-                              style={{ background: payingId === inv.id ? '#aaa' : '#FF6200', color: 'white', border: 'none', padding: '4px 12px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', borderRadius: 2, letterSpacing: '0.04em' }}
+                              style={{ background: payingId === inv.id ? '#aaa' : '#2563EB', color: 'white', border: 'none', padding: '4px 12px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', borderRadius: 2, letterSpacing: '0.04em' }}
                             >
                               {payingId === inv.id ? '...' : 'PAY'}
                             </button>

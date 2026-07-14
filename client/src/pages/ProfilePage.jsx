@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, MapPin, Edit3, Save, X } from 'lucide-react';
 
@@ -13,8 +14,8 @@ const Section = ({ title, children }) => (
 
 const Field = ({ label, value, icon: Icon }) => (
   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 18 }}>
-    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#f0ebf8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <Icon size={16} color="#4D148C" />
+    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E8EEF6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <Icon size={16} color="#0A2540" />
     </div>
     <div>
       <p style={{ margin: 0, fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
@@ -24,17 +25,37 @@ const Field = ({ label, value, icon: Icon }) => (
 );
 
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
-    name: user?.name || 'John Doe',
-    email: user?.email || 'johndoe@email.com',
-    phone: '+1 (555) 012-3456',
-    address: '1 Velonex Way, Memphis, TN 38125',
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    address: user?.address || '',
   });
   const [saved, setSaved] = useState(false);
 
+  // Account pages require a signed-in customer
+  useEffect(() => {
+    if (!loading && !user) navigate('/auth');
+  }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (user) {
+      setForm(f => ({
+        ...f,
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || f.phone,
+        address: user.address || f.address,
+      }));
+    }
+  }, [user]);
+
   const save = () => { setEditing(false); setSaved(true); setTimeout(() => setSaved(false), 2500); };
+
+  if (loading || !user) return null;
 
   return (
     <div className="page" style={{ background: '#f5f5f5', paddingTop: 56 }}>
@@ -61,7 +82,7 @@ const ProfilePage = () => {
             </div>
             <h3 style={{ margin: '0 0 4px', fontSize: '1.05rem', color: '#222' }}>{form.name}</h3>
             <p style={{ margin: '0 0 16px', fontSize: '0.8rem', color: '#888' }}>{form.email}</p>
-            <div style={{ background: '#f0ebf8', borderRadius: 20, padding: '4px 14px', display: 'inline-block' }}>
+            <div style={{ background: '#E8EEF6', borderRadius: 20, padding: '4px 14px', display: 'inline-block' }}>
               <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700 }}>VELONEX24 MEMBER</span>
             </div>
             <div style={{ marginTop: 20, padding: '12px 0', borderTop: '1px solid #eee' }}>
@@ -86,7 +107,7 @@ const ProfilePage = () => {
                     </div>
                   ))}
                   <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                    <button onClick={save} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#FF6200', color: 'white', border: 'none', padding: '9px 20px', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', letterSpacing: '0.05em' }}><Save size={14} /> SAVE CHANGES</button>
+                    <button onClick={save} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#2563EB', color: 'white', border: 'none', padding: '9px 20px', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', letterSpacing: '0.05em' }}><Save size={14} /> SAVE CHANGES</button>
                     <button onClick={() => setEditing(false)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#eee', color: '#444', border: 'none', padding: '9px 16px', fontSize: '0.82rem', cursor: 'pointer' }}><X size={14} /> Cancel</button>
                   </div>
                 </div>

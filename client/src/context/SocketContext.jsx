@@ -19,17 +19,17 @@ export const SocketProvider = ({ children }) => {
     });
 
     socket.on('connect', () => {
-      console.log('⚡ Socket connected:', socket.id);
+      console.log('Socket connected:', socket.id);
       setConnected(true);
     });
 
     socket.on('disconnect', () => {
-      console.log('🔌 Socket disconnected');
+      console.log('Socket disconnected');
       setConnected(false);
     });
 
     socket.on('connect_error', (err) => {
-      console.log('❌ Socket connection error:', err.message);
+      console.log('Socket connection error:', err.message);
     });
 
     socketRef.current = socket;

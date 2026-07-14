@@ -23,7 +23,7 @@ const HomePage = () => {
       {/* ========== SECTION 1: HERO — Dark night sky with plane ========== */}
       <section style={{
         position: 'relative',
-        background: 'linear-gradient(to bottom, #1a0533 0%, #2d1054 50%, #4D148C 100%)',
+        background: 'linear-gradient(to bottom, #05101F 0%, #08203C 50%, #0A2540 100%)',
         minHeight: 380,
         overflow: 'hidden',
         display: 'flex',

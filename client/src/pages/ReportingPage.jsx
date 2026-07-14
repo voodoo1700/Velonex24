@@ -45,7 +45,7 @@ const ReportingPage = () => {
               {['1m', '3m', '6m', '1y'].map(r => (
                 <button key={r} onClick={() => setRange(r)} style={{
                   padding: '6px 14px', border: 'none', borderRadius: 2, fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
-                  background: range === r ? '#FF6200' : 'rgba(255,255,255,0.15)',
+                  background: range === r ? '#2563EB' : 'rgba(255,255,255,0.15)',
                   color: 'white', letterSpacing: '0.04em',
                 }}>{r.toUpperCase()}</button>
               ))}
@@ -57,7 +57,7 @@ const ReportingPage = () => {
       <div className="container" style={{ padding: '32px 24px' }}>
         {/* KPI row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
-          <Stat icon={Package} color="#4D148C" bg="#f0ebf8" label="Total Shipments" value="359" sub="↑ 14% vs last period" />
+          <Stat icon={Package} color="#0A2540" bg="#E8EEF6" label="Total Shipments" value="359" sub="↑ 14% vs last period" />
           <Stat icon={TrendingUp} color="#1a7a45" bg="#e8f8f0" label="Total Spend" value="$8,261" sub="↑ 8% vs last period" />
           <Stat icon={Clock} color="#b06a00" bg="#fff8e6" label="Avg. Transit Time" value="2.4 days" sub="Within SLA" />
           <Stat icon={MapPin} color="#1a6bbf" bg="#E8F0FB" label="Top Destination" value="New York" sub="48 shipments" />
@@ -68,7 +68,7 @@ const ReportingPage = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <h3 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#222' }}>Monthly Shipment Volume</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <BarChart2 size={16} color="#4D148C" />
+              <BarChart2 size={16} color="#0A2540" />
               <span style={{ fontSize: '0.78rem', color: '#888' }}>Last 6 months</span>
             </div>
           </div>
@@ -109,7 +109,7 @@ const ReportingPage = () => {
               <tbody>
                 {recentShipments.map(s => (
                   <tr key={s.id} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                    <td style={{ padding: '12px 16px', fontWeight: 600, color: '#4D148C', fontFamily: 'monospace' }}>{s.id}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0A2540', fontFamily: 'monospace' }}>{s.id}</td>
                     <td style={{ padding: '12px 16px', color: '#333' }}>{s.dest}</td>
                     <td style={{ padding: '12px 16px', color: '#777' }}>{s.date}</td>
                     <td style={{ padding: '12px 16px' }}>

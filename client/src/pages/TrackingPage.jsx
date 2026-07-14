@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Search, Package, MapPin, Calendar, Weight,
   AlertTriangle, DollarSign, Globe, CheckCircle2,
-  Clock, Truck, Info, ShieldAlert, FileText
+  Clock, Truck, Info, ShieldAlert, FileText, PauseCircle
 } from 'lucide-react';
 import api from '../services/api';
 import mapboxgl from 'mapbox-gl';
@@ -13,10 +13,10 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 /* ─── Status config ─────────────────────────────────────── */
 const STATUS_META = {
-  pending:          { label: 'Shipment Created',    icon: <FileText size={18} />, color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+  pending:          { label: 'Shipment Created',    icon: <FileText size={18} />, color: '#3B82F6', bg: 'rgba(59, 130, 246,0.08)' },
   picked_up:        { label: 'Picked Up',           icon: <Package size={18} />, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
-  in_transit:       { label: 'In Transit',          icon: <Truck size={18} />, color: '#6366f1', bg: 'rgba(99,102,241,0.08)' },
-  out_for_delivery: { label: 'Out for Delivery',    icon: <Truck size={18} />, color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
+  in_transit:       { label: 'In Transit',          icon: <Truck size={18} />, color: '#3B82F6', bg: 'rgba(37, 99, 235,0.08)' },
+  out_for_delivery: { label: 'Out for Delivery',    icon: <Truck size={18} />, color: '#2563EB', bg: 'rgba(37, 99, 235,0.08)' },
   delivered:        { label: 'Delivered',           icon: <CheckCircle2 size={18} />, color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
   on_hold:          { label: 'On Hold',             icon: <AlertTriangle size={18} />,  color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
 };
@@ -137,18 +137,18 @@ const TrackingPage = () => {
       map.addControl(new mapboxgl.NavigationControl(), 'top-right');
       map.on('load', () => {
         // Origin marker
-        new mapboxgl.Marker({ color: '#4D148C' }).setLngLat([shipment.origin.lng, shipment.origin.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Origin:</strong> ${shipment.origin.city}`)).addTo(map);
+        new mapboxgl.Marker({ color: '#0A2540' }).setLngLat([shipment.origin.lng, shipment.origin.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Origin:</strong> ${shipment.origin.city}`)).addTo(map);
         // Destination marker
         new mapboxgl.Marker({ color: '#10b981' }).setLngLat([shipment.destination.lng, shipment.destination.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Destination:</strong> ${shipment.destination.city}`)).addTo(map);
         // Current location pulse
         const el = document.createElement('div');
-        el.innerHTML = `<div style="position:relative;width:22px;height:22px"><div style="position:absolute;inset:0;background:#f97316;border-radius:50%;opacity:0.3;animation:markerPulse 2s ease-out infinite"></div><div style="position:absolute;inset:5px;background:#f97316;border-radius:50%;border:2px solid white;z-index:1"></div></div>`;
+        el.innerHTML = `<div style="position:relative;width:22px;height:22px"><div style="position:absolute;inset:0;background:#2563EB;border-radius:50%;opacity:0.3;animation:markerPulse 2s ease-out infinite"></div><div style="position:absolute;inset:5px;background:#2563EB;border-radius:50%;border:2px solid white;z-index:1"></div></div>`;
         new mapboxgl.Marker({ element: el }).setLngLat([shipment.currentLocation.lng, shipment.currentLocation.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Current:</strong> ${shipment.currentLocation.city}`)).addTo(map);
         // Route lines
         map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[shipment.origin.lng, shipment.origin.lat],[shipment.currentLocation.lng, shipment.currentLocation.lat],[shipment.destination.lng, shipment.destination.lat]] } } });
-        map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#4D148C', 'line-width': 2, 'line-dasharray': [4, 3], 'line-opacity': 0.4 } });
+        map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#0A2540', 'line-width': 2, 'line-dasharray': [4, 3], 'line-opacity': 0.4 } });
         map.addSource('traveled', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[shipment.origin.lng, shipment.origin.lat],[shipment.currentLocation.lng, shipment.currentLocation.lat]] } } });
-        map.addLayer({ id: 'traveled-line', type: 'line', source: 'traveled', paint: { 'line-color': '#f97316', 'line-width': 3 } });
+        map.addLayer({ id: 'traveled-line', type: 'line', source: 'traveled', paint: { 'line-color': '#2563EB', 'line-width': 3 } });
 
         // Animation Layer (Marching Ants)
         map.addLayer({
@@ -190,7 +190,7 @@ const TrackingPage = () => {
     <div style={{ background: '#F8F9FA', minHeight: '100vh' }}>
 
       {/* ── HERO SEARCH SECTION ──────────────────────── */}
-      <div style={{ background: 'linear-gradient(135deg, #1a0533 0%, #2d1254 50%, #1a0533 100%)', padding: '48px 0 56px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #05101F 0%, #0E2A4E 50%, #05101F 100%)', padding: '48px 0 56px' }}>
         <div className="container">
           <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'white', marginBottom: 6, letterSpacing: '-0.02em' }}>
             Track Your Shipment
@@ -210,7 +210,7 @@ const TrackingPage = () => {
                 id="tracking-input"
               />
             </div>
-            <button type="submit" disabled={loading} id="track-button" style={{ background: '#f97316', color: 'white', border: 'none', padding: '0 32px', fontSize: '0.9rem', fontWeight: 800, letterSpacing: '0.06em', cursor: 'pointer', transition: 'background 0.2s', textTransform: 'uppercase', minWidth: 120 }}>
+            <button type="submit" disabled={loading} id="track-button" style={{ background: '#2563EB', color: 'white', border: 'none', padding: '0 32px', fontSize: '0.9rem', fontWeight: 800, letterSpacing: '0.06em', cursor: 'pointer', transition: 'background 0.2s', textTransform: 'uppercase', minWidth: 120 }}>
               {loading ? <span className="spinner" style={{ width: 20, height: 20, borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)', borderTopColor: 'white' }} /> : 'TRACK'}
             </button>
           </form>
@@ -262,8 +262,8 @@ const TrackingPage = () => {
                       </span>
                       {shipment.status === 'in_transit' && (
                         <span style={{ 
-                          width: 8, height: 8, borderRadius: '50%', background: '#f97316', 
-                          boxShadow: '0 0 0 3px rgba(249,115,22,0.2)',
+                          width: 8, height: 8, borderRadius: '50%', background: '#2563EB', 
+                          boxShadow: '0 0 0 3px rgba(37, 99, 235,0.2)',
                           animation: 'pulse 2s infinite'
                         }} />
                       )}
@@ -277,7 +277,7 @@ const TrackingPage = () => {
                       <span style={{ color: '#D1D5DB' }}>→</span>
                       {shipment.status === 'in_transit' && shipment.currentLocation?.city && (
                         <>
-                          <span style={{ color: '#f97316', fontWeight: 600 }}>{shipment.currentLocation.city}</span>
+                          <span style={{ color: '#2563EB', fontWeight: 600 }}>{shipment.currentLocation.city}</span>
                           <span style={{ color: '#D1D5DB' }}>→</span>
                         </>
                       )}
@@ -309,10 +309,10 @@ const TrackingPage = () => {
             {/* ── INFO CARDS ────────────────────────────── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(195px, 1fr))', gap: 14, marginBottom: 20 }}>
               {[
-                { icon: <MapPin size={17} />, label: 'Current Location', value: shipment.currentLocation?.city || 'N/A', accent: '#f97316' },
-                { icon: <Calendar size={17} />, label: 'Est. Delivery', value: formatDate(shipment.estimatedDelivery), accent: '#6366f1' },
+                { icon: <MapPin size={17} />, label: 'Current Location', value: shipment.currentLocation?.city || 'N/A', accent: '#2563EB' },
+                { icon: <Calendar size={17} />, label: 'Est. Delivery', value: formatDate(shipment.estimatedDelivery), accent: '#3B82F6' },
                 { icon: <Weight size={17} />, label: 'Weight', value: `${shipment.weight} lbs`, accent: '#3b82f6' },
-                { icon: <Package size={17} />, label: 'Package Type', value: shipment.packageType || 'Standard', accent: '#8b5cf6' },
+                { icon: <Package size={17} />, label: 'Package Type', value: shipment.packageType || 'Standard', accent: '#3B82F6' },
               ].map((info, i) => (
                 <div key={i} style={{ background: 'white', borderRadius: 12, padding: '18px 20px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #F3F4F6' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7, color: info.accent, marginBottom: 10 }}>
@@ -327,8 +327,8 @@ const TrackingPage = () => {
             {/* ── SENDER / RECEIVER ─────────────────────── */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
               {[
-                { title: '📤 From', name: shipment.senderName, address: shipment.senderAddress, city: shipment.origin?.city },
-                { title: '📥 To', name: shipment.receiverName, address: shipment.receiverAddress, city: shipment.destination?.city },
+                { title: 'From', name: shipment.senderName, address: shipment.senderAddress, city: shipment.origin?.city },
+                { title: 'To', name: shipment.receiverName, address: shipment.receiverAddress, city: shipment.destination?.city },
               ].map((p, i) => (
                 <div key={i} style={{ background: 'white', borderRadius: 12, padding: '20px 22px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #F3F4F6' }}>
                   <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF', marginBottom: 12 }}>{p.title}</div>
@@ -343,14 +343,14 @@ const TrackingPage = () => {
 
             {/* ── ALERTS ───────────────────────────────── */}
             {shipment.status === 'on_hold' && shipment.holdReason && (
-              <AlertBanner icon="⏸" title="Shipment On Hold" text={shipment.holdReason} color="#DC2626" bg="#FEF2F2" border="#FECACA" />
+              <AlertBanner icon={<PauseCircle size={20} />} title="Shipment On Hold" text={shipment.holdReason} color="#DC2626" bg="#FEF2F2" border="#FECACA" />
             )}
             {shipment.delayReason && (
-              <AlertBanner icon="⚠️" title={`Delay Notice: ${shipment.delayReason}`} text={shipment.delayDescription || 'Your shipment has been delayed. We apologize for the inconvenience.'} color="#D97706" bg="#FFFBEB" border="#FDE68A" />
+              <AlertBanner icon={<AlertTriangle size={20} />} title={`Delay Notice: ${shipment.delayReason}`} text={shipment.delayDescription || 'Your shipment has been delayed. We apologize for the inconvenience.'} color="#D97706" bg="#FFFBEB" border="#FDE68A" />
             )}
             {shipment.customsIntercepted && (
               <AlertBanner
-                icon="🛃"
+                icon={<Globe size={20} />}
                 title="Customs Inspection"
                 text={`Your package is currently being processed by customs authorities. ${shipment.borderClearanceEligible ? 'This item is eligible for border clearance processing.' : 'Clearance may take additional time.'} ${shipment.customsNotes ? shipment.customsNotes : ''}`}
                 color="#1D4ED8"
@@ -376,7 +376,7 @@ const TrackingPage = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ fontWeight: 800, color: '#92400E', fontSize: '0.95rem' }}>${parseFloat(inv.amount).toFixed(2)}</span>
                         <span style={{ fontSize: '0.72rem', color: inv.paid ? '#10b981' : '#EF4444', fontWeight: 700, background: inv.paid ? '#ECFDF5' : '#FEF2F2', padding: '2px 8px', borderRadius: 6 }}>
-                          {inv.paid ? '✓ PAID' : '⚠ UNPAID'}
+                          {inv.paid ? 'PAID' : 'UNPAID'}
                         </span>
                       </div>
                     </div>
@@ -392,7 +392,7 @@ const TrackingPage = () => {
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', marginBottom: 20, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', border: '1px solid #F3F4F6' }}>
               <div style={{ padding: '16px 22px', borderBottom: '1px solid #F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <MapPin size={17} style={{ color: '#6366f1' }} />
+                  <MapPin size={17} style={{ color: '#3B82F6' }} />
                   <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#111827' }}>Live Tracking Map</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: '0.75rem', color: '#9CA3AF' }}>
@@ -402,7 +402,7 @@ const TrackingPage = () => {
                       style={{ 
                         border: 'none', padding: '4px 10px', borderRadius: 6, fontSize: '0.7rem', fontWeight: 700,
                         background: mapStyle === 'light-v11' ? 'white' : 'transparent',
-                        color: mapStyle === 'light-v11' ? '#4D148C' : '#6B7280',
+                        color: mapStyle === 'light-v11' ? '#0A2540' : '#6B7280',
                         boxShadow: mapStyle === 'light-v11' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
                         cursor: 'pointer', transition: 'all 0.2s'
                       }}
@@ -412,15 +412,15 @@ const TrackingPage = () => {
                       style={{ 
                         border: 'none', padding: '4px 10px', borderRadius: 6, fontSize: '0.7rem', fontWeight: 700,
                         background: mapStyle === 'satellite-v9' ? 'white' : 'transparent',
-                        color: mapStyle === 'satellite-v9' ? '#4D148C' : '#6B7280',
+                        color: mapStyle === 'satellite-v9' ? '#0A2540' : '#6B7280',
                         boxShadow: mapStyle === 'satellite-v9' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
                         cursor: 'pointer', transition: 'all 0.2s'
                       }}
                     >Satellite</button>
                   </div>
                   <div style={{ width: 1, height: 16, background: '#E5E7EB' }} />
-                  <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#4D148C', marginRight: 5 }} />Origin</span>
-                  <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#f97316', marginRight: 5 }} />Current</span>
+                  <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#0A2540', marginRight: 5 }} />Origin</span>
+                  <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#2563EB', marginRight: 5 }} />Current</span>
                   <span><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#10b981', marginRight: 5 }} />Destination</span>
                 </div>
               </div>
@@ -430,7 +430,7 @@ const TrackingPage = () => {
             {/* ── TIMELINE ──────────────────────────────── */}
             <div style={{ background: 'white', borderRadius: 16, padding: '24px 28px', boxShadow: '0 4px 24px rgba(0,0,0,0.06)', border: '1px solid #F3F4F6' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
-                <FileText size={17} style={{ color: '#6366f1' }} />
+                <FileText size={17} style={{ color: '#3B82F6' }} />
                 <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827', margin: 0 }}>Shipment History</h3>
               </div>
               <div style={{ paddingLeft: 8 }}>

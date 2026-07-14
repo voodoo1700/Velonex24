@@ -1,19 +1,19 @@
 /* ===========================
    VELONEX24 DESIGN SYSTEM
-   FedEx-Inspired Corporate Theme
+   Enterprise Dark Navy Theme
    ========================= */
 
 :root {
   /* Primary Palette */
-  --primary: #4D148C;
-  --primary-light: #6B2FAD;
-  --primary-dark: #3A0F6A;
-  --primary-hover: #5A1A9E;
+  --primary: #0A2540;
+  --primary-light: #1E3A5F;
+  --primary-dark: #061A30;
+  --primary-hover: #10345E;
 
-  /* Accent — Orange */
-  --accent: #FF6200;
-  --accent-hover: #E55800;
-  --accent-light: #FF8533;
+  /* Accent — Blue */
+  --accent: #2563EB;
+  --accent-hover: #1D4ED8;
+  --accent-light: #60A5FA;
 
   /* Backgrounds */
   --bg-white: #FFFFFF;
@@ -37,7 +37,7 @@
   /* Borders */
   --border: #E0E0E0;
   --border-light: #EEEEEE;
-  --border-focus: #4D148C;
+  --border-focus: #0A2540;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -191,7 +191,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .status-badge.pending   { background: #FFF3CD; color: #856404; }
 .status-badge.picked_up { background: #CCE5FF; color: #004085; }
-.status-badge.in_transit { background: #E8DAEF; color: #4D148C; }
+.status-badge.in_transit { background: #DBEAFE; color: #0A2540; }
 .status-badge.out_for_delivery { background: #D4EDDA; color: #155724; }
 .status-badge.delivered { background: #C3E6CB; color: #0B5E2F; }
 .status-badge.on_hold   { background: #F8D7DA; color: #721C24; }
@@ -221,10 +221,10 @@ h1, h2, h3, h4, h5, h6 {
 .btn:active { transform: translateY(0); }
 
 .btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(77,20,140,0.35); color: white; }
+.btn-primary:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(10, 37, 64,0.35); color: white; }
 
 .btn-accent { background: var(--accent); color: white; }
-.btn-accent:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(255,98,0,0.35); color: white; }
+.btn-accent:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(37, 99, 235,0.35); color: white; }
 
 .btn-outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
 .btn-outline:hover { background: var(--accent); color: white; }
@@ -271,7 +271,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(77, 20, 140, 0.15);
+  box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.15);
 }
 
 .input::placeholder { color: var(--text-muted); }
@@ -419,7 +419,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .quick-action-link:hover .quick-action-icon {
-  background: #f0ebf8;
+  background: #E8EEF6;
   border-color: var(--primary);
 }
 

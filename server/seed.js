@@ -8,7 +8,7 @@ const Shipment = require('./models/Shipment');
 const seedData = async () => {
   try {
     await connectDB();
-    console.log('🌱 Seeding database...\n');
+    console.log('Seeding database...\n');
 
     // Clear existing data
     await User.deleteMany({});
@@ -22,7 +22,7 @@ const seedData = async () => {
       role: 'admin'
     });
     await admin.save();
-    console.log('✅ Admin user created: admin@velonex24.com / admin123');
+    console.log('Admin user created: admin@velonex24.com / admin123');
 
     // Create test user
     const user = new User({
@@ -32,7 +32,7 @@ const seedData = async () => {
       role: 'user'
     });
     await user.save();
-    console.log('✅ Test user created: john@example.com / user123');
+    console.log('Test user created: john@example.com / user123');
 
     // Sample shipments
     const shipments = [
@@ -138,17 +138,17 @@ const seedData = async () => {
     ];
 
     await Shipment.insertMany(shipments);
-    console.log(`✅ ${shipments.length} sample shipments created`);
+    console.log(`${shipments.length} sample shipments created`);
 
-    console.log('\n🎉 Database seeded successfully!');
-    console.log('\n📋 Test Tracking IDs:');
+    console.log('\nDatabase seeded successfully!');
+    console.log('\nTest Tracking IDs:');
     shipments.forEach(s => {
       console.log(`   ${s.trackingId} — ${s.status} (${s.origin.city} → ${s.destination.city})`);
     });
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Seed error:', error);
+    console.error('Seed error:', error);
     process.exit(1);
   }
 };

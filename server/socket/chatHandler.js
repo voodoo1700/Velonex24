@@ -4,12 +4,12 @@ const chatBot = require('../services/chatBot');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    console.log(`🔌 Socket connected: ${socket.id}`);
+    console.log(`Socket connected: ${socket.id}`);
 
     // User joins a chat session room
     socket.on('joinSession', async ({ sessionId }) => {
       socket.join(sessionId);
-      console.log(`📝 Socket ${socket.id} joined session ${sessionId}`);
+      console.log(`Socket ${socket.id} joined session ${sessionId}`);
     });
 
     // User sends a message
@@ -115,7 +115,7 @@ module.exports = (io) => {
         }
         // If session status is 'human', bot does nothing — admin handles it
       } catch (error) {
-        console.error('❌ Chat handler error:', error);
+        console.error('Chat handler error:', error);
         socket.emit('chatError', { error: 'Failed to process message' });
       }
     });
@@ -123,7 +123,7 @@ module.exports = (io) => {
     // Admin joins admin room for live updates
     socket.on('adminConnect', () => {
       socket.join('admin_room');
-      console.log(`👑 Admin connected: ${socket.id}`);
+      console.log(`Admin connected: ${socket.id}`);
     });
 
     // Admin joins a specific chat session
@@ -142,7 +142,7 @@ module.exports = (io) => {
           const joinMsg = new Message({
             sessionId,
             sender: 'bot',
-            message: '🟢 A support agent has joined the conversation. You\'re now speaking with a live agent.',
+            message: 'A support agent has joined the conversation. You\'re now speaking with a live agent.',
             quickActions: [],
             timestamp: new Date()
           });
@@ -156,10 +156,10 @@ module.exports = (io) => {
 
           io.to('admin_room').emit('sessionUpdate', { session });
 
-          console.log(`👑 Admin took over session ${sessionId}`);
+          console.log(`Admin took over session ${sessionId}`);
         }
       } catch (error) {
-        console.error('❌ Admin join error:', error);
+        console.error('Admin join error:', error);
       }
     });
 
@@ -196,7 +196,7 @@ module.exports = (io) => {
           { updatedAt: new Date() }
         );
       } catch (error) {
-        console.error('❌ Admin message error:', error);
+        console.error('Admin message error:', error);
       }
     });
 
@@ -213,7 +213,7 @@ module.exports = (io) => {
           const closeMsg = new Message({
             sessionId,
             sender: 'bot',
-            message: 'This conversation has been closed. Thank you for using Velonex24! 👋',
+            message: 'This conversation has been closed. Thank you for using Velonex24!',
             quickActions: [],
             timestamp: new Date()
           });
@@ -223,7 +223,7 @@ module.exports = (io) => {
           io.to('admin_room').emit('sessionUpdate', { session });
         }
       } catch (error) {
-        console.error('❌ Close session error:', error);
+        console.error('Close session error:', error);
       }
     });
 
@@ -237,7 +237,7 @@ module.exports = (io) => {
     });
 
     socket.on('disconnect', () => {
-      console.log(`🔌 Socket disconnected: ${socket.id}`);
+      console.log(`Socket disconnected: ${socket.id}`);
     });
   });
 };

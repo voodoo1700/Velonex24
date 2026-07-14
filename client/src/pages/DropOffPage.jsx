@@ -212,8 +212,8 @@ const DropOffPage = () => {
             margin: '0 auto'
           }}>
             {[
-              { name: 'Velonex Express', color: '#4D148C', sub: '' },
-              { name: 'Velonex Office', color: '#FF6200', sub: '' },
+              { name: 'Velonex Express', color: '#0A2540', sub: '' },
+              { name: 'Velonex Office', color: '#2563EB', sub: '' },
               { name: 'Dollar General', color: '#FEDD00', textColor: '#333' },
               { name: 'Walgreens', color: '#E31837', sub: '' },
               { name: 'Office Depot', color: '#CC0000', sub: 'OfficeMax' },

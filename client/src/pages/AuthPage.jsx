@@ -204,7 +204,7 @@ const AuthPage = () => {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
-                style={{ width: 16, height: 16, accentColor: '#4D148C' }}
+                style={{ width: 16, height: 16, accentColor: '#0A2540' }}
               />
               Remember my user ID.
             </label>
@@ -215,7 +215,7 @@ const AuthPage = () => {
             type="submit"
             disabled={loading}
             style={{
-              background: '#FF6200', color: 'white',
+              background: '#2563EB', color: 'white',
               border: 'none', borderRadius: 2,
               padding: '13px 40px',
               fontSize: '0.95rem', fontWeight: 700,

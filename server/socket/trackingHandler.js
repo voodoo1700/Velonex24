@@ -4,7 +4,7 @@ module.exports = (io) => {
     // Client subscribes to track a specific shipment
     socket.on('trackShipment', ({ trackingId }) => {
       socket.join(`tracking_${trackingId}`);
-      console.log(`📍 Socket ${socket.id} tracking ${trackingId}`);
+      console.log(`Socket ${socket.id} tracking ${trackingId}`);
     });
 
     // Client unsubscribes from tracking

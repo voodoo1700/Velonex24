@@ -1,16 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Plus, Star, Trash2, Home, Building2, Edit3 } from 'lucide-react';
-
-const INIT_ADDRESSES = [
-  { id: 1, type: 'home', label: 'Home', name: 'John Doe', street: '123 Maple Street', city: 'Memphis', state: 'TN', zip: '38125', country: 'United States', default: true },
-  { id: 2, type: 'work', label: 'Office', name: 'Velonex Inc.', street: '500 Commerce Ave', city: 'Nashville', state: 'TN', zip: '37201', country: 'United States', default: false },
-  { id: 3, type: 'other', label: 'Warehouse', name: 'Velonex Fulfillment', street: '2200 Logistics Pkwy', city: 'Atlanta', state: 'GA', zip: '30301', country: 'United States', default: false },
-];
+import { useAuth } from '../context/AuthContext';
 
 const typeIcon = (t) => t === 'home' ? <Home size={14} /> : t === 'work' ? <Building2 size={14} /> : <MapPin size={14} />;
 
 const AddressBook = () => {
-  const [addresses, setAddresses] = useState(INIT_ADDRESSES);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [addresses, setAddresses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newAddr, setNewAddr] = useState({ label: '', name: '', street: '', city: '', state: '', zip: '', country: 'United States', type: 'home' });
 
@@ -22,6 +20,11 @@ const AddressBook = () => {
     setNewAddr({ label: '', name: '', street: '', city: '', state: '', zip: '', country: 'United States', type: 'home' });
   };
 
+  // Account pages require a signed-in customer
+  useEffect(() => {
+    if (!loading && !user) navigate('/auth');
+  }, [loading, user, navigate]);
+
   const inp = (key, placeholder, half) => (
     <input
       placeholder={placeholder}
@@ -30,6 +33,8 @@ const AddressBook = () => {
       style={{ padding: '9px 12px', border: '1px solid #ccc', fontSize: '0.88rem', borderRadius: 2, outline: 'none', width: half ? 'calc(50% - 5px)' : '100%', boxSizing: 'border-box' }}
     />
   );
+
+  if (loading || !user) return null;
 
   return (
     <div className="page" style={{ background: '#f5f5f5', paddingTop: 56 }}>
@@ -42,7 +47,7 @@ const AddressBook = () => {
             </div>
             <button
               onClick={() => setShowForm(p => !p)}
-              style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#FF6200', color: 'white', border: 'none', padding: '10px 20px', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.05em', cursor: 'pointer', borderRadius: 2 }}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#2563EB', color: 'white', border: 'none', padding: '10px 20px', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.05em', cursor: 'pointer', borderRadius: 2 }}
             >
               <Plus size={16} /> ADD ADDRESS
             </button>
@@ -61,10 +66,19 @@ const AddressBook = () => {
               <div style={{ display: 'flex', gap: 10 }}>{inp('city', 'City', true)}{inp('state', 'State', true)}</div>
               <div style={{ display: 'flex', gap: 10 }}>{inp('zip', 'ZIP Code', true)}{inp('country', 'Country', true)}</div>
               <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                <button onClick={addNew} style={{ background: '#FF6200', color: 'white', border: 'none', padding: '9px 22px', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', letterSpacing: '0.05em', borderRadius: 2 }}>SAVE ADDRESS</button>
+                <button onClick={addNew} style={{ background: '#2563EB', color: 'white', border: 'none', padding: '9px 22px', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', letterSpacing: '0.05em', borderRadius: 2 }}>SAVE ADDRESS</button>
                 <button onClick={() => setShowForm(false)} style={{ background: 'none', border: '1px solid #ccc', padding: '9px 16px', fontSize: '0.82rem', cursor: 'pointer', color: '#555', borderRadius: 2 }}>Cancel</button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {addresses.length === 0 && !showForm && (
+          <div style={{ background: 'white', border: '1px dashed #ccc', borderRadius: 4, padding: '48px 24px', textAlign: 'center', color: '#888' }}>
+            <MapPin size={28} style={{ marginBottom: 10, color: '#bbb' }} />
+            <p style={{ margin: 0, fontWeight: 600, color: '#555' }}>No saved addresses yet</p>
+            <p style={{ margin: '6px 0 0', fontSize: '0.85rem' }}>Add your first address to speed up shipping and billing.</p>
           </div>
         )}
 
@@ -72,7 +86,7 @@ const AddressBook = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
           {addresses.map(a => (
             <div key={a.id} style={{ background: 'white', border: a.default ? '2px solid var(--primary)' : '1px solid #e5e5e5', borderRadius: 4, overflow: 'hidden' }}>
-              <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 8, background: a.default ? '#f0ebf8' : '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
+              <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 8, background: a.default ? '#E8EEF6' : '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
                 <span style={{ color: a.default ? 'var(--primary)' : '#666' }}>{typeIcon(a.type)}</span>
                 <span style={{ fontWeight: 700, fontSize: '0.85rem', color: a.default ? 'var(--primary)' : '#333' }}>{a.label || a.type.toUpperCase()}</span>
                 {a.default && <span style={{ marginLeft: 'auto', fontSize: '0.7rem', background: 'var(--primary)', color: 'white', padding: '2px 8px', borderRadius: 10, fontWeight: 700 }}>DEFAULT</span>}

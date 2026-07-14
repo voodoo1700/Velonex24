@@ -316,7 +316,7 @@ const LocationsPage = () => {
             }}>
               <div style={{
                 width: 120, height: 100, borderRadius: 'var(--radius-sm)', flexShrink: 0,
-                background: 'linear-gradient(135deg, #4D148C 0%, #FF6200 100%)',
+                background: 'linear-gradient(135deg, #0A2540 0%, #2563EB 100%)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}>
                 <Camera size={40} color="white" />

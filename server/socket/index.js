@@ -16,7 +16,7 @@ const initializeSocket = (server) => {
   chatHandler(io);
   trackingHandler(io);
 
-  console.log('⚡ Socket.io initialized');
+  console.log('Socket.io initialized');
   return io;
 };
 

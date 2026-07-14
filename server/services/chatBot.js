@@ -1,23 +1,23 @@
 const Shipment = require('../models/Shipment');
 
 const GREETING_RESPONSES = [
-  "Hello! 👋 Welcome to Velonex24 Express Logistics. How may I help you today?",
+  "Hello! Welcome to Velonex24 Express Logistics. How may I help you today?",
 ];
 
 const MAIN_MENU_ACTIONS = [
-  { label: '📦 Track my package', value: 'track_package' },
-  { label: '💬 Talk to support', value: 'talk_to_support' },
-  { label: '⚠️ Report a problem', value: 'report_problem' },
-  { label: '🕐 Delivery delay inquiry', value: 'delivery_delay' }
+  { label: 'Track my package', value: 'track_package' },
+  { label: 'Talk to support', value: 'talk_to_support' },
+  { label: 'Report a problem', value: 'report_problem' },
+  { label: 'Delivery delay inquiry', value: 'delivery_delay' }
 ];
 
 const STATUS_LABELS = {
-  pending: '📋 Pending Pickup',
-  picked_up: '📥 Picked Up',
-  in_transit: '🚚 In Transit',
-  out_for_delivery: '🚀 Out for Delivery',
-  delivered: '✅ Delivered',
-  on_hold: '⏸️ On Hold'
+  pending: 'Pending Pickup',
+  picked_up: 'Picked Up',
+  in_transit: 'In Transit',
+  out_for_delivery: 'Out for Delivery',
+  delivered: 'Delivered',
+  on_hold: 'On Hold'
 };
 
 class ChatBot {
@@ -69,7 +69,7 @@ class ChatBot {
 
     if (msg === 'talk_to_support' || msg.includes('support') || msg.includes('human') || msg.includes('agent') || msg.includes('speak')) {
       return {
-        message: "I'm connecting you to a support agent now. Please hold on — someone will be with you shortly! 🟢",
+        message: "I'm connecting you to a support agent now. Please hold on — someone will be with you shortly!",
         quickActions: [],
         newState: 'escalate_to_human'
       };
@@ -104,11 +104,11 @@ class ChatBot {
       const shipment = await Shipment.findOne({ trackingId });
       if (!shipment) {
         return {
-          message: `❌ I couldn't find a shipment with tracking ID **${trackingId}**. Please double-check the ID and try again.`,
+          message: `I couldn't find a shipment with tracking ID **${trackingId}**. Please double-check the ID and try again.`,
           quickActions: [
-            { label: '🔄 Try another ID', value: 'track_package' },
-            { label: '💬 Talk to support', value: 'talk_to_support' },
-            { label: '🏠 Main menu', value: 'main_menu' }
+            { label: 'Try another ID', value: 'track_package' },
+            { label: 'Talk to support', value: 'talk_to_support' },
+            { label: 'Main menu', value: 'main_menu' }
           ],
           newState: 'awaiting_choice'
         };
@@ -121,17 +121,17 @@ class ChatBot {
       const location = shipment.currentLocation?.city || 'Unknown';
 
       return {
-        message: `📦 **Shipment ${shipment.trackingId}**\n\n` +
+        message: `**Shipment ${shipment.trackingId}**\n\n` +
           `**Status:** ${statusLabel}\n` +
           `**Current Location:** ${location}\n` +
           `**From:** ${shipment.origin?.city} → **To:** ${shipment.destination?.city}\n` +
           `**Estimated Delivery:** ${eta}\n\n` +
-          (shipment.status === 'on_hold' ? `⚠️ **Hold Reason:** ${shipment.holdReason}\n\n` : '') +
+          (shipment.status === 'on_hold' ? `**Hold Reason:** ${shipment.holdReason}\n\n` : '') +
           `Is there anything else I can help with?`,
         quickActions: [
-          { label: '📦 Track another package', value: 'track_package' },
-          { label: '💬 Talk to support', value: 'talk_to_support' },
-          { label: '🏠 Main menu', value: 'main_menu' }
+          { label: 'Track another package', value: 'track_package' },
+          { label: 'Talk to support', value: 'talk_to_support' },
+          { label: 'Main menu', value: 'main_menu' }
         ],
         newState: 'awaiting_choice'
       };
@@ -150,10 +150,10 @@ class ChatBot {
       const shipment = await Shipment.findOne({ trackingId });
       if (!shipment) {
         return {
-          message: `❌ No shipment found with ID **${trackingId}**. Please verify and try again.`,
+          message: `No shipment found with ID **${trackingId}**. Please verify and try again.`,
           quickActions: [
-            { label: '🔄 Try again', value: 'delivery_delay' },
-            { label: '💬 Talk to support', value: 'talk_to_support' }
+            { label: 'Try again', value: 'delivery_delay' },
+            { label: 'Talk to support', value: 'talk_to_support' }
           ],
           newState: 'awaiting_choice'
         };
@@ -166,21 +166,21 @@ class ChatBot {
 
       let delayInfo = '';
       if (shipment.status === 'on_hold') {
-        delayInfo = `\n\n⚠️ Your shipment is currently **on hold**. Reason: ${shipment.holdReason || 'Under review'}. We recommend speaking with our support team for more details.`;
+        delayInfo = `\n\nYour shipment is currently **on hold**. Reason: ${shipment.holdReason || 'Under review'}. We recommend speaking with our support team for more details.`;
       } else if (shipment.status === 'delivered') {
-        delayInfo = `\n\n✅ Great news! Your shipment has been **delivered**.`;
+        delayInfo = `\n\nGreat news! Your shipment has been **delivered**.`;
       } else if (shipment.estimatedDelivery && new Date(shipment.estimatedDelivery) < new Date()) {
-        delayInfo = `\n\n⏰ Your shipment appears to be **past the estimated delivery date**. We apologize for the delay. Would you like to speak with support?`;
+        delayInfo = `\n\nYour shipment appears to be **past the estimated delivery date**. We apologize for the delay. Would you like to speak with support?`;
       } else {
-        delayInfo = `\n\n✅ Your shipment is on schedule. Estimated delivery: **${eta}**.`;
+        delayInfo = `\n\nYour shipment is on schedule. Estimated delivery: **${eta}**.`;
       }
 
       return {
-        message: `🕐 **Delay Inquiry — ${shipment.trackingId}**\n\n**Status:** ${statusLabel}\n**Location:** ${shipment.currentLocation?.city || 'In transit'}${delayInfo}`,
+        message: `**Delay Inquiry — ${shipment.trackingId}**\n\n**Status:** ${statusLabel}\n**Location:** ${shipment.currentLocation?.city || 'In transit'}${delayInfo}`,
         quickActions: [
-          { label: '💬 Talk to support', value: 'talk_to_support' },
-          { label: '📦 Track another package', value: 'track_package' },
-          { label: '🏠 Main menu', value: 'main_menu' }
+          { label: 'Talk to support', value: 'talk_to_support' },
+          { label: 'Track another package', value: 'track_package' },
+          { label: 'Main menu', value: 'main_menu' }
         ],
         newState: 'awaiting_choice'
       };
@@ -198,8 +198,8 @@ class ChatBot {
     return {
       message: `Thank you for reporting this issue. I've logged your concern:\n\n> _"${description}"_\n\nOur team will review it shortly. Would you like to speak with a support agent about this?`,
       quickActions: [
-        { label: '💬 Yes, connect me', value: 'talk_to_support' },
-        { label: '✅ No, that\'s all', value: 'main_menu' }
+        { label: 'Yes, connect me', value: 'talk_to_support' },
+        { label: 'No, that\'s all', value: 'main_menu' }
       ],
       newState: 'awaiting_choice'
     };
@@ -210,8 +210,8 @@ class ChatBot {
       return this.handleGreeting();
     }
     return {
-      message: "Thank you for using Velonex24! If you need anything else, just send a message anytime. Have a great day! 😊",
-      quickActions: [{ label: '🏠 Start over', value: 'main_menu' }],
+      message: "Thank you for using Velonex24! If you need anything else, just send a message anytime. Have a great day!",
+      quickActions: [{ label: 'Start over', value: 'main_menu' }],
       newState: 'awaiting_choice'
     };
   }

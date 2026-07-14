@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 100">
+  <g fill="none" stroke-linecap="round">
+    <path d="M18 22 L40 76" stroke="#FFFFFF" stroke-width="13"/>
+    <path d="M62 22 L40 76" stroke="#FFFFFF" stroke-width="13"/>
+    <path d="M42 70 L74 40" stroke="#2E7CF6" stroke-width="13"/>
+  </g>
+  <g transform="translate(74,40) rotate(-43.2)">
+    <polygon points="-4,-15 26,0 -4,15" fill="#2E7CF6"/>
+  </g>
+</svg>

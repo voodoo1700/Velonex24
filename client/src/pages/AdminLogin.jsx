@@ -41,6 +41,7 @@ const AdminLogin = () => {
       }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <img src="/logo.svg" alt="Velonex24" style={{ height: 54, display: 'block', margin: '0 auto 6px' }} />
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
             <span style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--primary)' }}>Velon</span>
             <span style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--accent)' }}>Ex</span>

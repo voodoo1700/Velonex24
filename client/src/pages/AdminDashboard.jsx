@@ -18,8 +18,8 @@ const STATUS_LABELS = {
   out_for_delivery: 'Out for Delivery', delivered: 'Delivered', on_hold: 'On Hold'
 };
 const STATUS_ICONS = {
-  pending: '⏳', picked_up: '📦', in_transit: '🚚',
-  out_for_delivery: '🚀', delivered: '✅', on_hold: '⏸'
+  pending: Clock, picked_up: Package, in_transit: Truck,
+  out_for_delivery: Send, delivered: CheckCircle2, on_hold: PauseCircle
 };
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pending' },
@@ -30,11 +30,11 @@ const STATUS_OPTIONS = [
   { value: 'on_hold', label: 'On Hold' },
 ];
 const INVOICE_TYPES = [
-  { value: 'shipping_fee', label: '📦 Shipping Fee' },
-  { value: 'delay_fee',    label: '⚠️ Delay Fee' },
-  { value: 'customs_fee',  label: '🛃 Customs Fee' },
-  { value: 'storage_fee',  label: '🏭 Storage Fee' },
-  { value: 'other',        label: '💼 Other' },
+  { value: 'shipping_fee', label: 'Shipping Fee' },
+  { value: 'delay_fee',    label: 'Delay Fee' },
+  { value: 'customs_fee',  label: 'Customs Fee' },
+  { value: 'storage_fee',  label: 'Storage Fee' },
+  { value: 'other',        label: 'Other' },
 ];
 
 /* ─── Tracking ID generator ─────────────────────────────── */
@@ -225,33 +225,33 @@ function ShipmentModal({ initial, onClose, onSaved }) {
 
             {/* Sender */}
             <div className="admin-form-section">
-              <div className="admin-form-section-title">📤 Sender Details</div>
+              <div className="admin-form-section-title">Sender Details</div>
               <div className="admin-form-grid">
                 {inp('Sender Name', 'senderName', 'text', 'Full name or company')}
                 {inp('Sender Address', 'senderAddress', 'text', '123 Main St, City, ST')}
                 <div style={{ position: 'relative' }}>
                   {inp('Origin City', 'origin.city', 'text', 'New York')}
-                  <button type="button" onClick={() => handleGeocode('origin.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#4D148C', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>🔍 Lookup</button>
+                  <button type="button" onClick={() => handleGeocode('origin.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#0A2540', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>Lookup</button>
                 </div>
               </div>
             </div>
 
             {/* Receiver */}
             <div className="admin-form-section">
-              <div className="admin-form-section-title">📥 Receiver Details</div>
+              <div className="admin-form-section-title">Receiver Details</div>
               <div className="admin-form-grid">
                 {inp('Receiver Name', 'receiverName', 'text', 'Full name')}
                 {inp('Receiver Address', 'receiverAddress', 'text', '456 Oak Ave, City, ST')}
                 <div style={{ position: 'relative' }}>
                   {inp('Destination City', 'destination.city', 'text', 'Los Angeles')}
-                  <button type="button" onClick={() => handleGeocode('destination.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#4D148C', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>🔍 Lookup</button>
+                  <button type="button" onClick={() => handleGeocode('destination.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#0A2540', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>Lookup</button>
                 </div>
               </div>
             </div>
 
             {/* Package */}
             <div className="admin-form-section">
-              <div className="admin-form-section-title">📦 Package Info</div>
+              <div className="admin-form-section-title">Package Info</div>
               <div className="admin-form-grid">
                 {inp('Weight (lbs)', 'weight', 'number', '2.5')}
                 {inp('Est. Delivery', 'estimatedDelivery', 'date')}
@@ -269,13 +269,13 @@ function ShipmentModal({ initial, onClose, onSaved }) {
             </div>
 
             {/* Current Location (Real-time Map Positioning) */}
-            <div className="admin-form-section" style={{ border: '1px solid rgba(249,115,22,0.2)', background: 'rgba(249,115,22,0.02)', borderRadius: 12 }}>
-              <div className="admin-form-section-title" style={{ color: '#f97316' }}><MapPin size={13} /> 🗺️ Real-Time Map Location</div>
+            <div className="admin-form-section" style={{ border: '1px solid rgba(59,130,246,0.15)', background: 'rgba(59,130,246,0.03)', borderRadius: 12 }}>
+              <div className="admin-form-section-title" style={{ color: '#60A5FA' }}><MapPin size={13} /> Real-Time Map Location</div>
               <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>Manually position the package marker on the tracking map.</p>
               <div className="admin-form-grid">
                 <div style={{ position: 'relative' }}>
                   {inp('Current City', 'currentLocation.city', 'text', 'e.g. Dubai Hub')}
-                  <button type="button" onClick={() => handleGeocode('currentLocation.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#f97316', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>🔍 Lookup</button>
+                  <button type="button" onClick={() => handleGeocode('currentLocation.city')} style={{ position: 'absolute', right: 8, bottom: 8, background: '#2563EB', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', zIndex: 10 }}>Lookup</button>
                 </div>
                 {inp('Latitude', 'currentLocation.lat', 'number', '51.4700', { step: '0.0001' })}
                 {inp('Longitude', 'currentLocation.lng', 'number', '-0.4543', { step: '0.0001' })}
@@ -284,19 +284,21 @@ function ShipmentModal({ initial, onClose, onSaved }) {
 
             {/* Timeline Management */}
             <div className="admin-form-section">
-              <div className="admin-form-section-title"><Clock size={13} /> 📜 Shipment History (Timeline)</div>
+              <div className="admin-form-section-title"><Clock size={13} /> Shipment History (Timeline)</div>
               
               {/* Existing Timeline */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
                 {(form.timeline || []).length === 0 && <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.2)', textAlign: 'center', padding: '10px' }}>No timeline events recorded</div>}
                 {(form.timeline || []).map((entry, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, alignItems: 'center' }}>
-                    <div style={{ fontSize: '1rem' }}>{STATUS_ICONS[entry.status] || '📍'}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.5)' }}>
+                      {(() => { const Icon = STATUS_ICONS[entry.status] || MapPin; return <Icon size={15} />; })()}
+                    </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'white' }}>{entry.location}</div>
                       <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>{entry.description}</div>
                       <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>
-                        {new Date(entry.timestamp).toLocaleString()} • <span style={{ textTransform: 'uppercase', fontWeight: 800, color: 'rgba(124,58,237,0.8)' }}>{entry.status}</span>
+                        {new Date(entry.timestamp).toLocaleString()} • <span style={{ textTransform: 'uppercase', fontWeight: 800, color: 'rgba(29, 78, 216,0.8)' }}>{entry.status}</span>
                       </div>
                     </div>
                     <button type="button" onClick={() => removeTimeline(i)} style={{ background: 'none', border: 'none', color: 'rgba(239,68,68,0.6)', cursor: 'pointer', padding: 4 }}>
@@ -307,8 +309,8 @@ function ShipmentModal({ initial, onClose, onSaved }) {
               </div>
 
               {/* Add New Event */}
-              <div style={{ padding: '16px', background: 'rgba(124,58,237,0.05)', border: '1px dashed rgba(124,58,237,0.3)', borderRadius: 10 }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Add New History Event</div>
+              <div style={{ padding: '16px', background: 'rgba(29, 78, 216,0.05)', border: '1px dashed rgba(29, 78, 216,0.3)', borderRadius: 10 }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Add New History Event</div>
                 <div className="admin-form-grid" style={{ gap: '10px' }}>
                   <Field label="Event Location">
                     <input className="input" placeholder="e.g. London Distribution Center" value={newTimeline.location} onChange={e => setNewTimeline(p => ({ ...p, location: e.target.value }))} style={{ fontSize: '0.82rem' }} />
@@ -335,7 +337,7 @@ function ShipmentModal({ initial, onClose, onSaved }) {
 
             {/* Delay & Hold */}
             <div className="admin-form-section">
-              <div className="admin-form-section-title">⚠️ Delay & Hold Information</div>
+              <div className="admin-form-section-title">Delay & Hold Information</div>
               <div className="admin-form-grid">
                 <Field label="Hold Reason">
                   <input className="input" placeholder="e.g. Address verification required" value={form.holdReason || ''} onChange={e => set('holdReason', e.target.value)} style={{ fontSize: '0.87rem' }} />
@@ -419,7 +421,7 @@ function ShipmentModal({ initial, onClose, onSaved }) {
           <div className="admin-modal-footer">
             <button type="button" className="btn btn-ghost btn-sm" onClick={onClose}>Cancel</button>
             <button type="submit" className="btn btn-primary btn-sm" disabled={saving}>
-              {saving ? <span className="spinner" style={{ width: 16, height: 16, borderWidth: 2, margin: '0 8px', borderColor: 'rgba(255,255,255,0.3)', borderTopColor: 'white' }} /> : isEdit ? '💾 Save Changes' : '⚡ Create Shipment'}
+              {saving ? <span className="spinner" style={{ width: 16, height: 16, borderWidth: 2, margin: '0 8px', borderColor: 'rgba(255,255,255,0.3)', borderTopColor: 'white' }} /> : isEdit ? 'Save Changes' : 'Create Shipment'}
             </button>
           </div>
         </form>
@@ -526,7 +528,7 @@ const AdminDashboard = () => {
     return `${Math.floor(h / 24)}d ago`;
   };
 
-  if (authLoading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0D0D14' }}><div className="spinner" /></div>;
+  if (authLoading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#070D18' }}><div className="spinner" /></div>;
 
   const statBar = stats ? [
     { icon: <Package size={20} />,       value: stats.totalShipments,    label: 'Total Shipments', cls: 'purple' },
@@ -552,8 +554,8 @@ const AdminDashboard = () => {
         {/* Brand */}
         <div style={{ padding: '22px 18px 18px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 2, marginBottom: 4 }}>
-            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#a78bfa' }}>Velon</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#f97316' }}>Ex</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#60A5FA' }}>Velon</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#60A5FA' }}>Ex</span>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'rgba(255,255,255,0.3)', marginLeft: 1 }}>24</span>
           </div>
           <div style={{ fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.25)', fontWeight: 700 }}>Admin Console</div>
@@ -581,12 +583,12 @@ const AdminDashboard = () => {
         {/* User + Logout */}
         <div style={{ padding: '16px 14px', borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.88rem', fontWeight: 800, flexShrink: 0, boxShadow: '0 0 12px rgba(124,58,237,0.4)' }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg,#1D4ED8,#1E40AF)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.88rem', fontWeight: 800, flexShrink: 0, boxShadow: '0 0 12px rgba(29, 78, 216,0.4)' }}>
               {user?.name?.[0]?.toUpperCase() || 'A'}
             </div>
             <div className="admin-nav-text" style={{ overflow: 'hidden' }}>
               <div style={{ fontSize: '0.84rem', fontWeight: 700, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name || 'Admin'}</div>
-              <div style={{ fontSize: '0.65rem', color: '#f97316', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>ADMIN</div>
+              <div style={{ fontSize: '0.65rem', color: '#60A5FA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>ADMIN</div>
             </div>
           </div>
           <button className="admin-nav-item" onClick={() => { logout(); navigate('/admin/login'); }} style={{ color: '#f87171', width: '100%', justifyContent: 'flex-start' }}>
@@ -625,7 +627,7 @@ const AdminDashboard = () => {
 
             <div className="data-table-container">
               <div className="data-table-header">
-                <h3>🕐 Recent Shipments</h3>
+                <h3>Recent Shipments</h3>
                 <button className="btn btn-ghost btn-sm" onClick={() => setActiveTab('shipments')}>View All →</button>
               </div>
               <table className="data-table">
@@ -636,7 +638,7 @@ const AdminDashboard = () => {
                       <td>{s.trackingId}</td>
                       <td style={{ color: 'rgba(255,255,255,0.5)' }}>{s.origin?.city} → {s.destination?.city}</td>
                       <td style={{ color: 'rgba(255,255,255,0.65)' }}>{s.receiverName}</td>
-                      <td><span className={`status-badge ${s.status}`}>{STATUS_ICONS[s.status]} {STATUS_LABELS[s.status]}</span></td>
+                      <td><span className={`status-badge ${s.status}`}>{STATUS_LABELS[s.status]}</span></td>
                       <td>
                         {s.invoices?.length > 0 && (
                           <span className="invoice-badge"><DollarSign size={11} />${s.invoices.reduce((a, i) => a + i.amount, 0).toFixed(2)}</span>
@@ -684,7 +686,7 @@ const AdminDashboard = () => {
                         <td style={{ color: 'rgba(255,255,255,0.65)', maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.receiverName}</td>
                         <td style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>{s.origin?.city} → {s.destination?.city}</td>
                         <td style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>{s.weight}lb</td>
-                        <td><span className={`status-badge ${s.status}`}>{STATUS_ICONS[s.status]} {STATUS_LABELS[s.status]}</span></td>
+                        <td><span className={`status-badge ${s.status}`}>{STATUS_LABELS[s.status]}</span></td>
                         <td>
                           {s.invoices?.length > 0
                             ? <span className="invoice-badge"><DollarSign size={10} />${s.invoices.reduce((a, i) => a + i.amount, 0).toFixed(0)}</span>
@@ -692,8 +694,8 @@ const AdminDashboard = () => {
                         </td>
                         <td>
                           <div style={{ display: 'flex', gap: 4 }}>
-                            {s.customsIntercepted && <span title="Customs Intercepted" style={{ fontSize: '0.9rem' }}>🛃</span>}
-                            {s.delayReason && <span title={`Delay: ${s.delayReason}`} style={{ fontSize: '0.9rem' }}>⚠️</span>}
+                            {s.customsIntercepted && <span title="Customs Intercepted" style={{ display: 'inline-flex', color: '#60A5FA' }}><Globe size={14} /></span>}
+                            {s.delayReason && <span title={`Delay: ${s.delayReason}`} style={{ display: 'inline-flex', color: '#f59e0b' }}><AlertTriangle size={14} /></span>}
                           </div>
                         </td>
                         <td>
@@ -711,7 +713,7 @@ const AdminDashboard = () => {
                                 title="Quick Apply Changes"
                                 style={{ padding: '4px 8px', fontSize: '0.72rem', gap: 4, display: 'flex', alignItems: 'center' }}
                               >
-                                ⚡ Apply
+                                Apply
                               </button>
                             )}
                             <button className="btn btn-ghost btn-sm" onClick={() => { setEditingShipment(s); setShowModal(true); }} title="Full Edit" style={{ padding: '4px 8px' }}><Edit3 size={13} /></button>
@@ -731,7 +733,7 @@ const AdminDashboard = () => {
                               display: 'flex', flexDirection: 'column', gap: 10,
                             }}>
                               <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#f59e0b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2 }}>
-                                ⚡ Quick Apply — {STATUS_LABELS[s.status]}
+                                Quick Apply — {STATUS_LABELS[s.status]}
                               </div>
                               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                                 {s.status === 'on_hold' && (
@@ -756,7 +758,7 @@ const AdminDashboard = () => {
                               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
                                 <button className="btn btn-ghost btn-sm" onClick={() => setQuickEdit(null)}>Cancel</button>
                                 <button className="btn btn-accent btn-sm" onClick={applyQuickEdit} style={{ fontWeight: 700 }}>
-                                  ✓ Save Changes
+                                  Save Changes
                                 </button>
                               </div>
                             </div>
@@ -791,14 +793,14 @@ const AdminDashboard = () => {
                         <td style={{ color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace' }}>{i + 1}</td>
                         <td style={{ fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 30, height: 30, borderRadius: '50%', background: u.role === 'admin' ? 'linear-gradient(135deg,#f97316,#ea580c)' : 'linear-gradient(135deg,#7c3aed,#6d28d9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.78rem', fontWeight: 800, flexShrink: 0 }}>
+                            <div style={{ width: 30, height: 30, borderRadius: '50%', background: u.role === 'admin' ? 'linear-gradient(135deg,#3B82F6,#1D4ED8)' : 'linear-gradient(135deg,#1D4ED8,#1E40AF)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.78rem', fontWeight: 800, flexShrink: 0 }}>
                               {u.name?.[0]?.toUpperCase()}
                             </div>
                             {u.name}
                           </div>
                         </td>
                         <td style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem' }}>{u.email}</td>
-                        <td><span className={`status-badge ${u.role === 'admin' ? 'out_for_delivery' : 'picked_up'}`}>{u.role === 'admin' ? '👑 ADMIN' : '👤 USER'}</span></td>
+                        <td><span className={`status-badge ${u.role === 'admin' ? 'out_for_delivery' : 'picked_up'}`}>{u.role === 'admin' ? 'ADMIN' : 'USER'}</span></td>
                         <td style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
                         <td>
                           {u._id !== user?._id ? (
@@ -823,7 +825,7 @@ const AdminDashboard = () => {
         {activeTab === 'chat' && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="admin-chat-layout">
             <div className="admin-chat-list">
-              <div className="admin-chat-list-header"><h3>💬 Conversations ({chatSessions.filter(s => s.status !== 'closed').length})</h3></div>
+              <div className="admin-chat-list-header"><h3>Conversations ({chatSessions.filter(s => s.status !== 'closed').length})</h3></div>
               <div className="admin-chat-list-items">
                 {chatSessions.filter(s => s.status !== 'closed').length === 0 && (
                   <div style={{ padding: 24, textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: '0.85rem' }}>No active conversations</div>
@@ -837,7 +839,7 @@ const AdminDashboard = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span className="admin-chat-item-preview">{session.lastMessage?.message?.substring(0, 40) || '—'}</span>
                       <span className={`status-badge ${session.status === 'human' ? 'out_for_delivery' : 'pending'}`} style={{ fontSize: '0.58rem', padding: '2px 6px' }}>
-                        {session.status === 'human' ? '🟢 LIVE' : '🤖 BOT'}
+                        {session.status === 'human' ? 'LIVE' : 'BOT'}
                       </span>
                     </div>
                   </div>
@@ -860,7 +862,7 @@ const AdminDashboard = () => {
                   <div className="admin-chat-conv-messages">
                     {chatMessages.map((msg, i) => (
                       <div key={i} className={`chat-bubble ${msg.sender}`}>
-                        <div className="sender-label">{msg.sender === 'user' ? '👤 User' : msg.sender === 'admin' ? '👑 Admin' : '🤖 Bot'}</div>
+                        <div className="sender-label">{msg.sender === 'user' ? 'User' : msg.sender === 'admin' ? 'Admin' : 'Bot'}</div>
                         <div style={{ whiteSpace: 'pre-wrap', color: 'rgba(255,255,255,0.85)', fontSize: '0.88rem' }}>{msg.message}</div>
                         <div className="timestamp">{new Date(msg.timestamp).toLocaleTimeString()}</div>
                       </div>

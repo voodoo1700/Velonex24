@@ -1,3 +1,5 @@
+import { Phone, Mail } from 'lucide-react';
+
 const Footer = () => {
   return (
     <footer>
@@ -43,12 +45,12 @@ const Footer = () => {
               <h4 style={{ color: 'white', fontSize: '0.85rem', fontWeight: 700, marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Connect with Us</h4>
               {/* Phone */}
               <a href="tel:+16036619146" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontSize: '0.85rem', marginBottom: 10, textDecoration: 'none', fontWeight: 600 }}>
-                📞 +1 (603) 661-9146
+                <Phone size={14} /> +1 (603) 661-9146
               </a>
               <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', margin: '0 0 14px', paddingLeft: 22 }}>Mon–Sat: 7AM – 10PM ET</p>
               {/* Email placeholder — update when domain mailbox is ready */}
               <a href="mailto:support@velonex24.com" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', marginBottom: 10, textDecoration: 'none' }}>
-                ✉️ support@velonex24.com
+                <Mail size={14} /> support@velonex24.com
               </a>
               {['Service Alerts', 'Developer Portal', 'API Documentation'].map(item => (
                 <a key={item} href="#" style={{ display: 'block', color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', marginBottom: 8, textDecoration: 'none' }}>
@@ -62,7 +64,7 @@ const Footer = () => {
 
       {/* ── Trust Badges Strip ── */}
       <div style={{
-        background: '#1E0640',
+        background: '#08192E',
         borderTop: '1px solid rgba(255,255,255,0.08)',
         padding: '18px 0',
       }}>
@@ -91,7 +93,7 @@ const Footer = () => {
               <rect x="49" y="84" width="18" height="2" rx="1" fill="white" opacity="0.7"/>
               {/* Phone */}
               <rect x="76" y="64" width="14" height="22" rx="3" fill="white" opacity="0.9"/>
-              <rect x="81" y="83" width="4" height="2" rx="1" fill="#4D148C" opacity="0.7"/>
+              <rect x="81" y="83" width="4" height="2" rx="1" fill="#0A2540" opacity="0.7"/>
             </svg>
             <div>
               <p style={{ color: 'white', fontSize: '0.78rem', fontWeight: 700, margin: 0, letterSpacing: '0.02em' }}>
@@ -166,8 +168,8 @@ const Footer = () => {
             <svg width="28" height="34" viewBox="0 0 28 34" fill="none">
               <rect x="3" y="14" width="22" height="18" rx="3" fill="white" opacity="0.9"/>
               <path d="M8 14v-5a6 6 0 0 1 12 0v5" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="14" cy="22" r="3" fill="#4D148C"/>
-              <rect x="13" y="23" width="2" height="4" rx="1" fill="#4D148C"/>
+              <circle cx="14" cy="22" r="3" fill="#0A2540"/>
+              <rect x="13" y="23" width="2" height="4" rx="1" fill="#0A2540"/>
             </svg>
             <div>
               <p style={{ color: 'white', fontSize: '0.78rem', fontWeight: 700, margin: 0 }}>SSL Encrypted</p>
@@ -179,7 +181,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom bar */}
-      <div style={{ background: '#2A0A50', padding: '16px 0' }}>
+      <div style={{ background: '#061224', padding: '16px 0' }}>
         <div className="container" style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           flexWrap: 'wrap', gap: 12

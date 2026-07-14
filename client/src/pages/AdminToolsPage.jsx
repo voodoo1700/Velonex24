@@ -3,7 +3,7 @@ import { Users, Shield, CreditCard, Bell, Building2, Settings, ChevronRight } fr
 
 const tools = [
   {
-    icon: Users, color: '#4D148C', title: 'User Management',
+    icon: Users, color: '#0A2540', title: 'User Management',
     desc: 'Add, remove, or modify user access levels for your account.',
     actions: ['Add Users', 'Manage Roles', 'Deactivate Users'],
   },
@@ -69,7 +69,7 @@ const AdminToolsPage = () => {
                 {open && (
                   <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 8px' }}>
                     {t.actions.map((a) => (
-                      <button key={a} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 20px 10px 78px', background: 'none', border: 'none', fontSize: '0.88rem', color: '#4D148C', cursor: 'pointer', fontWeight: 500, textDecoration: 'underline' }}>
+                      <button key={a} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 20px 10px 78px', background: 'none', border: 'none', fontSize: '0.88rem', color: '#0A2540', cursor: 'pointer', fontWeight: 500, textDecoration: 'underline' }}>
                         {a}
                       </button>
                     ))}

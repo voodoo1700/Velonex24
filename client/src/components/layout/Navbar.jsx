@@ -358,6 +358,7 @@ const Navbar = () => {
                 textDecoration: 'none', flexShrink: 0, marginRight: 20
               }}
             >
+              <img src="/logo-mark.svg" alt="" style={{ height: 32, width: 33, marginRight: 8 }} />
               <span style={{ fontSize: '1.45rem', fontWeight: 900, color: 'white', letterSpacing: '-0.01em' }}>Velon</span>
               <span style={{ fontSize: '1.45rem', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.01em' }}>Ex</span>
               <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(255,255,255,0.6)', marginLeft: 2, alignSelf: 'flex-end', marginBottom: 4 }}>24</span>
@@ -446,7 +447,7 @@ const Navbar = () => {
                   {(user ? [
                     ...ACCOUNT_ITEMS,
                     { label: 'Log Out', to: null, isLogout: true },
-                  ] : ACCOUNT_ITEMS).map((item, idx) => (
+                  ] : []).map((item, idx) => (
                     <div key={idx} style={{ borderBottom: '1px solid #e8e8e8' }}>
                       {item.isLogout ? (
                         <button

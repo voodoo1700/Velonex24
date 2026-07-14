@@ -98,7 +98,7 @@ export const ChatProvider = ({ children }) => {
         setSessionStatus('closed');
         setMessages(prev => [...prev, {
           sender: 'system',
-          message: 'This conversation has been closed. Thank you for using Velonex24! 👋',
+          message: 'This conversation has been closed. Thank you for using Velonex24.',
           timestamp: new Date()
         }]);
       }

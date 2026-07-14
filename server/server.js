@@ -87,10 +87,10 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   await connectDB();
   server.listen(PORT, () => {
-    console.log(`\n🚀 Velonex24 Server running on port ${PORT}`);
-    console.log(`📡 API: http://localhost:${PORT}/api`);
-    console.log(`⚡ WebSocket: ws://localhost:${PORT}`);
-    console.log(`💚 Health: http://localhost:${PORT}/api/health\n`);
+    console.log(`\nVelonex24 Server running on port ${PORT}`);
+    console.log(`API: http://localhost:${PORT}/api`);
+    console.log(`WebSocket: ws://localhost:${PORT}`);
+    console.log(`Health: http://localhost:${PORT}/api/health\n`);
   });
 };
 

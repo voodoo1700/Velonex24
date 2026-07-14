@@ -3,7 +3,7 @@ import { Mail, Package, AlertCircle, Tag, Bell, Star } from 'lucide-react';
 
 const categories = [
   {
-    icon: Package, color: '#4D148C', title: 'Shipment Notifications',
+    icon: Package, color: '#0A2540', title: 'Shipment Notifications',
     prefs: [
       { label: 'Shipment picked up', checked: true },
       { label: 'In transit updates', checked: true },
@@ -86,7 +86,7 @@ const EmailPreferencesPage = () => {
 
         {/* Email address bar */}
         <div style={{ background: 'white', border: '1px solid #e5e5e5', borderRadius: 4, padding: '14px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Mail size={18} color="#4D148C" />
+          <Mail size={18} color="#0A2540" />
           <div>
             <p style={{ margin: 0, fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notifications sent to</p>
             <p style={{ margin: 0, fontWeight: 600, fontSize: '0.95rem', color: '#222' }}>user@example.com</p>
@@ -116,7 +116,7 @@ const EmailPreferencesPage = () => {
         <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
           <button
             onClick={() => { setSaved(true); setTimeout(() => setSaved(false), 2500); }}
-            style={{ background: '#FF6200', color: 'white', border: 'none', padding: '11px 28px', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.06em', cursor: 'pointer', borderRadius: 2 }}
+            style={{ background: '#2563EB', color: 'white', border: 'none', padding: '11px 28px', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.06em', cursor: 'pointer', borderRadius: 2 }}
           >
             SAVE PREFERENCES
           </button>

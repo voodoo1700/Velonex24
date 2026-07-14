@@ -7,15 +7,6 @@ export const STATUS_LABELS = {
   on_hold: 'On Hold'
 };
 
-export const STATUS_ICONS = {
-  pending: '📋',
-  picked_up: '📥',
-  in_transit: '🚚',
-  out_for_delivery: '🚀',
-  delivered: '✅',
-  on_hold: '⏸️'
-};
-
 export const formatDate = (date) => {
   if (!date) return 'N/A';
   return new Date(date).toLocaleDateString('en-US', {
