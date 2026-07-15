@@ -6,27 +6,7 @@ import {
   Send, RefreshCw, Store, Navigation
 } from 'lucide-react';
 
-/* Truck silhouette driving across the hero road */
-const HeroTruck = ({ height = 30 }) => (
-  <svg height={height} viewBox="0 0 140 60" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
-    {/* trailer */}
-    <rect x="0" y="6" width="88" height="36" rx="4" fill="#2B4A73" />
-    <rect x="6" y="12" width="76" height="4" rx="2" fill="rgba(255,255,255,0.18)" />
-    {/* cab */}
-    <path d="M92 16 h20 a6 6 0 0 1 4.6 2.1 L130 32 v12 a4 4 0 0 1 -4 4 h-34 z" fill="#2B4A73" />
-    <path d="M97 22 h13 a4 4 0 0 1 3 1.4 L122 33 h-25 z" fill="rgba(219,234,254,0.85)" />
-    {/* headlight + beam */}
-    <circle cx="129" cy="42" r="2.5" fill="#FDE68A" />
-    <polygon points="131,40 140,38 140,46 131,44" fill="rgba(253,230,138,0.25)" />
-    {/* wheels */}
-    <circle cx="20" cy="48" r="9" fill="#16264C" />
-    <circle cx="20" cy="48" r="3.5" fill="#3B82F6" />
-    <circle cx="46" cy="48" r="9" fill="#16264C" />
-    <circle cx="46" cy="48" r="3.5" fill="#3B82F6" />
-    <circle cx="110" cy="48" r="9" fill="#16264C" />
-    <circle cx="110" cy="48" r="3.5" fill="#3B82F6" />
-  </svg>
-);
+import HeroScene3D from '../components/HeroScene3D';
 
 const HomePage = () => {
   const [trackingId, setTrackingId] = useState('');
@@ -71,7 +51,7 @@ const HomePage = () => {
           ))}
         </div>
 
-        {/* Plane image positioned right — live flight animation */}
+        {/* Original cargo plane photo — live flight animation */}
         <img
           src="/hero-night.png"
           alt="Velonex24 cargo plane"
@@ -90,6 +70,9 @@ const HomePage = () => {
             willChange: 'transform'
           }}
         />
+
+        {/* Real-time 3D trucks on the road (SVG fallback without WebGL) */}
+        <HeroScene3D />
 
         {/* Hero Text */}
         <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: 600, padding: '0 24px' }}>
@@ -185,31 +168,6 @@ const HomePage = () => {
           </form>
         </div>
 
-        {/* Road strip with live trucks driving by */}
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 64, zIndex: 1, pointerEvents: 'none', overflow: 'hidden' }}>
-          {/* Road surface */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 20, background: 'rgba(0,0,0,0.35)' }} />
-          {/* Dashed center line */}
-          <div style={{
-            position: 'absolute', bottom: 9, left: 0, right: 0, height: 2,
-            backgroundImage: 'linear-gradient(90deg, rgba(255,255,255,0.3) 0 34px, transparent 34px 78px)',
-            backgroundSize: '78px 2px',
-            animation: 'roadDash 0.9s linear infinite'
-          }} />
-          {/* Distant truck (slow, dim) */}
-          <div className="hero-truck" style={{ position: 'absolute', bottom: 24, left: -200, opacity: 0.45, animation: 'truckDrive 17s linear infinite', animationDelay: '-9s' }}>
-            <HeroTruck height={22} />
-          </div>
-          {/* Mid truck */}
-          <div className="hero-truck" style={{ position: 'absolute', bottom: 18, left: -200, opacity: 0.7, animation: 'truckDrive 12.5s linear infinite', animationDelay: '-4s' }}>
-            <HeroTruck height={30} />
-          </div>
-          {/* Foreground truck (fast, bright) */}
-          <div className="hero-truck" style={{ position: 'absolute', bottom: 12, left: -200, opacity: 0.95, animation: 'truckDrive 8.5s linear infinite' }}>
-            <HeroTruck height={40} />
-          </div>
-        </div>
-
         <style>{`
           @keyframes twinkle {
             0%, 100% { opacity: 0.3; }
@@ -228,8 +186,21 @@ const HomePage = () => {
             from { background-position-x: 0; }
             to   { background-position-x: -78px; }
           }
+          @keyframes rimSpin {
+            to { transform: rotate(360deg); }
+          }
+          .trk-rim {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: rimSpin 0.55s linear infinite;
+          }
+          @keyframes beaconBlink {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0.15; }
+          }
+          .jet-beacon { animation: beaconBlink 1.4s ease-in-out infinite; }
           @media (prefers-reduced-motion: reduce) {
-            .hero-truck, .hero-plane-img { animation: none !important; }
+            .hero-truck, .hero-plane-img, .trk-rim, .jet-beacon { animation: none !important; }
           }
           #hero-tracking-input::placeholder { color: rgba(255,255,255,0.5); }
         `}</style>

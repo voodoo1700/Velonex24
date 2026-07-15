@@ -466,8 +466,13 @@ img.lazy.loaded {
     padding-bottom: 40px !important;
   }
 
+  /* Cargo jet on mobile: smaller, dimmed backdrop behind the hero text */
   .hero-plane-img {
-    display: none !important;
+    width: 88% !important;
+    max-width: 420px !important;
+    right: -36px !important;
+    top: 20% !important;
+    opacity: 0.4 !important;
   }
 
   .hero-text {
