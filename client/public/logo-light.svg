@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420">
+  <!-- Velonex24 mark (light variant for dark surfaces): VX monogram, arrow, truck -->
+  <!-- Swoosh -->
+  <path d="M30 310 C 200 245, 430 245, 730 290" stroke="#2E7CF6" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M60 340 C 225 278, 435 278, 735 315" stroke="rgba(255,255,255,0.55)" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <g fill="none" stroke-linecap="butt">
+    <!-- V -->
+    <path d="M95 50 L205 350" stroke="#FFFFFF" stroke-width="60"/>
+    <path d="M315 50 L205 350" stroke="#FFFFFF" stroke-width="60"/>
+    <!-- X descending arm -->
+    <path d="M355 85 L480 340" stroke="#FFFFFF" stroke-width="54"/>
+    <!-- X ascending arm / arrow shaft -->
+    <path d="M310 345 L585 108" stroke="#2E7CF6" stroke-width="54"/>
+  </g>
+  <!-- Arrowhead -->
+  <g transform="translate(585,108) rotate(-40.8)">
+    <polygon points="-6,-52 92,0 -6,52" fill="#2E7CF6"/>
+  </g>
+  <!-- Truck -->
+  <g fill="#FFFFFF">
+    <!-- speed lines -->
+    <rect x="446" y="242" width="50" height="9" rx="4.5"/>
+    <rect x="460" y="261" width="36" height="9" rx="4.5"/>
+    <rect x="472" y="280" width="24" height="9" rx="4.5"/>
+    <!-- trailer -->
+    <rect x="506" y="228" width="142" height="72" rx="8"/>
+    <!-- cab -->
+    <path d="M652 246 h42 a10 10 0 0 1 7.5 3.4 L732 278 v14 a8 8 0 0 1 -8 8 h-72 z"/>
+    <!-- window -->
+    <path d="M663 255 h26 a6 6 0 0 1 4.6 2.1 L708 273 h-45 z" fill="#16264C"/>
+    <!-- wheels -->
+    <circle cx="542" cy="308" r="16"/>
+    <circle cx="586" cy="308" r="16"/>
+    <circle cx="688" cy="308" r="16"/>
+  </g>
+</svg>
