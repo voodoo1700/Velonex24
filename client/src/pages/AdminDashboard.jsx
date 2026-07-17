@@ -156,6 +156,22 @@ function ShipmentModal({ initial, onClose, onSaved }) {
     }
   };
 
+  // Fill in coordinates from the city name when the admin never clicked Lookup
+  const geocodeIfNeeded = async (loc) => {
+    if (!loc?.city?.trim()) return loc;
+    if (Math.abs(loc.lat || 0) > 0.01 || Math.abs(loc.lng || 0) > 0.01) return loc;
+    try {
+      const token = import.meta.env.VITE_MAPBOX_TOKEN;
+      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(loc.city.trim())}.json?access_token=${token}&limit=1`);
+      const data = await resp.json();
+      if (data.features?.length) {
+        const [lng, lat] = data.features[0].center;
+        return { ...loc, lat: parseFloat(lat.toFixed(6)), lng: parseFloat(lng.toFixed(6)) };
+      }
+    } catch { /* keep as-is */ }
+    return loc;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setErr('');
     try {
@@ -169,6 +185,12 @@ function ShipmentModal({ initial, onClose, onSaved }) {
         }
       }
       if (!payload.estimatedDelivery) delete payload.estimatedDelivery;
+
+      [payload.origin, payload.destination, payload.currentLocation] = await Promise.all([
+        geocodeIfNeeded(payload.origin),
+        geocodeIfNeeded(payload.destination),
+        geocodeIfNeeded(payload.currentLocation),
+      ]);
 
       if (isEdit) { await api.updateShipment(form._id, payload); }
       else { await api.createShipment(payload); }

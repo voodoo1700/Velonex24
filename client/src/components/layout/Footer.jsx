@@ -44,8 +44,8 @@ const Footer = () => {
             <div>
               <h4 style={{ color: 'white', fontSize: '0.85rem', fontWeight: 700, marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Connect with Us</h4>
               {/* Phone */}
-              <a href="tel:+16036619146" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontSize: '0.85rem', marginBottom: 10, textDecoration: 'none', fontWeight: 600 }}>
-                <Phone size={14} /> +1 (603) 661-9146
+              <a href="tel:+19169165823" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontSize: '0.85rem', marginBottom: 10, textDecoration: 'none', fontWeight: 600 }}>
+                <Phone size={14} /> +1 (916) 916-5823
               </a>
               <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', margin: '0 0 14px', paddingLeft: 22 }}>Mon–Sat: 7AM – 10PM ET</p>
               {/* Email placeholder — update when domain mailbox is ready */}

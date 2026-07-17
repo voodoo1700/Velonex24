@@ -42,7 +42,7 @@ const SupportPage = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginBottom: 48 }}>
             {[
               { icon: <MessageCircle size={24} />, title: 'Live Chat', desc: 'Chat with our AI assistant or a live agent 24/7', action: 'START CHAT', color: 'var(--primary)', onClick: () => toggleChat() },
-              { icon: <Phone size={24} />, title: 'Call Us', desc: '+1 (603) 661-9146\nMon-Sat: 7AM - 10PM ET', action: 'CALL NOW', color: 'var(--accent)', href: 'tel:+16036619146' },
+              { icon: <Phone size={24} />, title: 'Call Us', desc: '+1 (916) 916-5823\nMon-Sat: 7AM - 10PM ET', action: 'CALL NOW', color: 'var(--accent)', href: 'tel:+19169165823' },
               { icon: <Mail size={24} />, title: 'Email', desc: 'support@velonex24.com\nResponse within 24 hours', action: 'SEND EMAIL', color: 'var(--info)', href: 'mailto:support@velonex24.com' },
               { icon: <FileText size={24} />, title: 'Help Center', desc: 'Browse FAQs and guides for self-service support', action: 'VIEW FAQS', color: 'var(--success)', onClick: () => document.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) },
             ].map((opt, i) => (

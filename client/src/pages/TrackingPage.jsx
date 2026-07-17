@@ -125,11 +125,41 @@ const TrackingPage = () => {
     if (mapRef.current) mapRef.current.remove();
     if (animationRef.current) cancelAnimationFrame(animationRef.current);
 
+    // Coordinates saved as 0,0 (never geocoded) get resolved from the city name
+    const hasCoords = (p) => p && Number.isFinite(p.lat) && Number.isFinite(p.lng) && !(Math.abs(p.lat) < 0.01 && Math.abs(p.lng) < 0.01);
+    const geocodeCity = async (city) => {
+      if (!city || !city.trim()) return null;
+      try {
+        const token = import.meta.env.VITE_MAPBOX_TOKEN;
+        const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(city.trim())}.json?access_token=${token}&limit=1`);
+        const data = await resp.json();
+        if (data.features?.length) {
+          const [lng, lat] = data.features[0].center;
+          return { lat, lng };
+        }
+      } catch { /* fall through */ }
+      return null;
+    };
+    const resolvePoint = async (p) => {
+      if (hasCoords(p)) return p;
+      const found = await geocodeCity(p?.city);
+      return found ? { ...p, ...found } : p;
+    };
+
+    let cancelled = false;
+    (async () => {
+    const [origin, destination, currentLocation] = await Promise.all([
+      resolvePoint(shipment.origin),
+      resolvePoint(shipment.destination),
+      resolvePoint(shipment.currentLocation),
+    ]);
+    if (cancelled || !mapContainer.current) return;
+
     try {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
         style: `mapbox://styles/mapbox/${mapStyle}`,
-        center: [shipment.currentLocation.lng, shipment.currentLocation.lat],
+        center: [currentLocation.lng, currentLocation.lat],
         zoom: 4,
         projection: 'globe'
       });
@@ -137,17 +167,17 @@ const TrackingPage = () => {
       map.addControl(new mapboxgl.NavigationControl(), 'top-right');
       map.on('load', () => {
         // Origin marker
-        new mapboxgl.Marker({ color: '#0A2540' }).setLngLat([shipment.origin.lng, shipment.origin.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Origin:</strong> ${shipment.origin.city}`)).addTo(map);
+        new mapboxgl.Marker({ color: '#0A2540' }).setLngLat([origin.lng, origin.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Origin:</strong> ${origin.city}`)).addTo(map);
         // Destination marker
-        new mapboxgl.Marker({ color: '#10b981' }).setLngLat([shipment.destination.lng, shipment.destination.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Destination:</strong> ${shipment.destination.city}`)).addTo(map);
+        new mapboxgl.Marker({ color: '#10b981' }).setLngLat([destination.lng, destination.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Destination:</strong> ${destination.city}`)).addTo(map);
         // Current location pulse
         const el = document.createElement('div');
         el.innerHTML = `<div style="position:relative;width:22px;height:22px"><div style="position:absolute;inset:0;background:#2563EB;border-radius:50%;opacity:0.3;animation:markerPulse 2s ease-out infinite"></div><div style="position:absolute;inset:5px;background:#2563EB;border-radius:50%;border:2px solid white;z-index:1"></div></div>`;
-        new mapboxgl.Marker({ element: el }).setLngLat([shipment.currentLocation.lng, shipment.currentLocation.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Current:</strong> ${shipment.currentLocation.city}`)).addTo(map);
+        new mapboxgl.Marker({ element: el }).setLngLat([currentLocation.lng, currentLocation.lat]).setPopup(new mapboxgl.Popup().setHTML(`<strong>Current:</strong> ${currentLocation.city}`)).addTo(map);
         // Route lines
-        map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[shipment.origin.lng, shipment.origin.lat],[shipment.currentLocation.lng, shipment.currentLocation.lat],[shipment.destination.lng, shipment.destination.lat]] } } });
+        map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[origin.lng, origin.lat],[currentLocation.lng, currentLocation.lat],[destination.lng, destination.lat]] } } });
         map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#0A2540', 'line-width': 2, 'line-dasharray': [4, 3], 'line-opacity': 0.4 } });
-        map.addSource('traveled', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[shipment.origin.lng, shipment.origin.lat],[shipment.currentLocation.lng, shipment.currentLocation.lat]] } } });
+        map.addSource('traveled', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [[origin.lng, origin.lat],[currentLocation.lng, currentLocation.lat]] } } });
         map.addLayer({ id: 'traveled-line', type: 'line', source: 'traveled', paint: { 'line-color': '#2563EB', 'line-width': 3 } });
 
         // Animation Layer (Marching Ants)
@@ -172,13 +202,15 @@ const TrackingPage = () => {
         };
         animate();
 
-        const bounds = new mapboxgl.LngLatBounds().extend([shipment.origin.lng, shipment.origin.lat]).extend([shipment.destination.lng, shipment.destination.lat]).extend([shipment.currentLocation.lng, shipment.currentLocation.lat]);
+        const bounds = new mapboxgl.LngLatBounds().extend([origin.lng, origin.lat]).extend([destination.lng, destination.lat]).extend([currentLocation.lng, currentLocation.lat]);
         map.fitBounds(bounds, { padding: 60 });
       });
       mapRef.current = map;
     } catch (err) { console.error('Map error:', err); }
-    return () => { 
-      if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } 
+    })();
+    return () => {
+      cancelled = true;
+      if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; }
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, [shipment, mapStyle]);
@@ -382,7 +414,7 @@ const TrackingPage = () => {
                     </div>
                   ))}
                   <div style={{ marginTop: 12, fontSize: '0.82rem', color: '#92400E', display: 'flex', gap: 6, alignItems: 'center' }}>
-                    <Info size={14} /> Please contact support at +1(603) 661-9146 to arrange payment and release your shipment.
+                    <Info size={14} /> Please contact support at +1 (916) 916-5823 to arrange payment and release your shipment.
                   </div>
                 </div>
               </div>

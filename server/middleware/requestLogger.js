@@ -16,11 +16,11 @@ const requestLogger = morgan(
         const trimmed = message.trim();
         const status = parseInt(trimmed.split(' ')[4], 10);
         if (status >= 500) {
-          console.error('🔴', trimmed);
+          console.error('', trimmed);
         } else if (status >= 400) {
-          console.warn('🟡', trimmed);
+          console.warn('', trimmed);
         } else {
-          console.log('🟢', trimmed);
+          console.log('', trimmed);
         }
       }
     }
