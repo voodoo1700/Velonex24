@@ -9,10 +9,13 @@ export const STATUS_LABELS = {
 
 export const formatDate = (date) => {
   if (!date) return 'N/A';
+  // Date-only values are stored as UTC midnight; format in UTC so the
+  // calendar day never shifts backward in western timezones.
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
+    timeZone: 'UTC'
   });
 };
 
